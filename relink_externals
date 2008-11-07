@@ -3,7 +3,7 @@
 curdir=$( pwd )
 
 for pkg in paula.*; do
-    pkgdir = ${curdir}/${pkg}
+    pkgdir=${curdir}/${pkg}
     if test -d ${pkgdir}/externals; then
 	cd ${pkgdir}/externals
 	rm -f paula.*
