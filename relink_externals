@@ -1,0 +1,13 @@
+#!/bin/sh
+
+curdir=`pwd`
+
+for i in paula.*; do
+    if test -d $curdir/$i/externals; then
+	cd $curdir/$i/externals
+	rm -f paula.*
+	for k in `cat pkglist.txt`; do
+	    ln ../../$k . -s
+	done
+    fi
+done

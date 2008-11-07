@@ -1,1 +1,0 @@
-paula.testing https://svn.plone.org/svn/collective/paula/paula.testing/trunk
