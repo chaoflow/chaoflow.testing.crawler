@@ -1,0 +1,15 @@
+*.pyc
+.*.swp
+.*.swo
+.swp
+.swo
+*.egg-info
+/.installed.cfg
+/bin
+/build
+/develop-eggs
+/dist
+/externals/
+/parts
+setup.py.old
+/var

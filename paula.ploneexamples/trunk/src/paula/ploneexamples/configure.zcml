@@ -1,0 +1,25 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    >
+
+  <five:registerPackage package="." initialize=".initialize" />
+
+  <!-- reuse something, or define in paula.authentication -->
+  <permission
+      id="paula.ploneexamples.AddMinimalPloneUser"
+      title="Paula: Add Minimal Plone User"
+      />
+        
+  <!-- reuse something, or define in paula.authentication -->
+  <permission
+      id="paula.ploneexamples.AddBasicGroup"
+      title="Paula: Add Basic Group"
+      />
+        
+  <include package=".browser" />
+  <include file="adapters.zcml" />
+  <include file="content.zcml" />
+  <include file="profiles.zcml" />
+
+</configure>

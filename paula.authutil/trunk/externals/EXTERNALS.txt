@@ -1,0 +1,2 @@
+paula.authentication https://svn.plone.org/svn/collective/paula/paula.authentication/trunk
+paula.testing https://svn.plone.org/svn/collective/paula/paula.testing/trunk

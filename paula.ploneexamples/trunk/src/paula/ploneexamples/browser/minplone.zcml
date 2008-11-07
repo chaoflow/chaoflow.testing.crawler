@@ -1,0 +1,39 @@
+<configure 
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    >
+    
+  <browser:page
+      for="paula.examples.interfaces.IMinimalPloneUser"
+      name="view"
+      template="minplone.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="zope.app.container.interfaces.IAdding"
+      name="paula.ploneexamples.MinimalPloneUser"
+      class=".minplone.MinimalPloneUserAddForm"
+      permission="paula.ploneexamples.AddMinimalPloneUser"
+      />
+      
+  <browser:page
+      for="paula.examples.interfaces.IMinimalPloneUser"
+      name="edit"
+      class=".minplone.MinimalPloneUserEditForm"
+      permission="cmf.ModifyPortalContent"
+      />
+      
+  <browser:addMenuItem
+      title="Paula Minimal Plone User"
+      factory="paula.ploneexamples.MinimalPloneUser"
+      view="paula.ploneexamples.MinimalPloneUser"
+      permission="paula.ploneexamples.AddMinimalPloneUser"
+      />
+      
+  <browser:resource
+      name="paula_ploneexamples_minimal_plone_user_icon.png"
+      image="minplone.png"
+      />
+        
+</configure>

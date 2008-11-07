@@ -1,0 +1,8 @@
+paula.authentication https://svn.plone.org/svn/collective/paula/paula.authentication/trunk
+paula.authutil https://svn.plone.org/svn/collective/paula/paula.authutil/trunk
+paula.groups https://svn.plone.org/svn/collective/paula/paula.groups/trunk
+paula.grouputil https://svn.plone.org/svn/collective/paula/paula.grouputil/trunk
+paula.properties https://svn.plone.org/svn/collective/paula/paula.properties/trunk
+paula.proputil https://svn.plone.org/svn/collective/paula/paula.proputil/trunk
+paula.examples https://svn.plone.org/svn/collective/paula/paula.examples/trunk
+paula.testing https://svn.plone.org/svn/collective/paula/paula.testing/trunk

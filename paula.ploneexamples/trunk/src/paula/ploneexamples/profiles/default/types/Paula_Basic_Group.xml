@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<object name="Paula Basic Group"
+   meta_type="Factory-based Type Information"
+   i18n:domain="paula.basicgroup" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <property name="title" i18n:translate="">Basic Group</property>
+ <property name="description" i18n:translate="">A basic group</property>
+ <property name="content_icon">++resource++paula_ploneexamples_basic_group_icon.png</property>
+ <property name="content_meta_type">Paula Basic Group</property>
+ <property name="product"></property>
+ <property name="factory">paula.ploneexamples.BasicGroup</property>
+ <property name="immediate_view">@@edit</property>
+ <property name="global_allow">True</property>
+ <property name="filter_content_types">False</property>
+ <property name="allowed_content_types" />
+ <property name="allow_discussion">False</property>
+ <alias from="(Default)" to="@@view"/>
+ <alias from="edit" to="@@edit"/>
+ <alias from="view" to="@@view"/>
+ <action title="View" action_id="view" category="object" condition_expr=""
+    url_expr="string:${object_url}" visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="Edit" action_id="edit" category="object" condition_expr=""
+    url_expr="string:${object_url}/edit" visible="True">
+  <permission value="Modify portal content"/>
+ </action>
+</object>

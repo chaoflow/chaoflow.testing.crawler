@@ -1,0 +1,11 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    >
+
+  <include package="zope.component" file="meta.zcml" />
+
+  <adapter factory=".adapters.AuthProviderFromBasicUser" />
+  <adapter factory=".adapters.BasicPropertyProvider" />
+  <adapter factory=".adapters.MembershipProviderFromBasicGroup" />
+
+</configure>

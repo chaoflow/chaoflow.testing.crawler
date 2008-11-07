@@ -1,0 +1,2 @@
+paula.properties https://svn.plone.org/svn/collective/paula/paula.properties/trunk
+paula.testing https://svn.plone.org/svn/collective/paula/paula.testing/trunk
