@@ -31,7 +31,8 @@ from zope.publisher.interfaces import IRequest
 
 FAKE_LOGIN = 'fakelogin'
 FAKE_PASSWORD = 'fakepassword'
-FAKE_REQUEST = UserDict(login=FAKE_LOGIN, password=FAKE_PASSWORD)
+FAKE_CREDS = {'login':FAKE_LOGIN, 'password':FAKE_PASSWORD}
+FAKE_REQUEST = UserDict(FAKE_CREDS)
 alsoProvides(FAKE_REQUEST, IRequest)
 
 AUTHPLUG_NAME = "Paula: Fake PAU AuthenticatorPlugin - Do not use!"

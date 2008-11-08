@@ -28,11 +28,11 @@ from paula.pau_addons.interfaces import IPropertyInterface
 from paula.pasplugins.tests.fake_pau_ap import FAKE_LOGIN
 
 class IA(Interface):
-    a1 = Attribute(u'a1')
-    a2 = Attribute(u'a2')
+    email = Attribute(u'email')
+    realname = Attribute(u'realname')
 
 class IB(Interface):
-    b = Attribute(u'b')
+    foo = Attribute(u'foo')
 
 alsoProvides(IA, IPropertyInterface)
 alsoProvides(IB, IPropertyInterface)
@@ -46,6 +46,8 @@ def setPropertiesForPrincipal(event):
     principal = event.principal
 
     if principal.id == FAKE_LOGIN:
-        principal.a1 = 1
-        principal.a2 = 2
-        principal.b = 3
+        principal.email = u'foo@bar.com'
+        principal.realname = u'fake user'
+        principal.foo = u'foo value'
+        alsoProvides(principal, IA)
+        alsoProvides(principal, IB)

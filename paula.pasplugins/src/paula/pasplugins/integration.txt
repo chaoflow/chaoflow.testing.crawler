@@ -70,12 +70,12 @@ for the fake user:
 The user carries groups and properties provided by our fake testing
 subscribers:
 
-    >>> principal.a1
-    1
-    >>> principal.a2
-    2
-    >>> principal.b
-    3
+    >>> principal.email
+    u'foo@bar.com'
+    >>> principal.realname
+    u'fake user'
+    >>> principal.foo
+    u'foo value'
     >>> principal.groups
     ['fakegroup1', 'fakegroup2']
 
@@ -85,12 +85,12 @@ The user should also be returned for a getPrincipal call:
     >>> principal2 = pau.getPrincipal('fakelogin')
     >>> principal2.id
     'fakelogin'
-    >>> principal2.a1
-    1
-    >>> principal2.a2
-    2
-    >>> principal2.b
-    3
+    >>> principal2.email
+    u'foo@bar.com'
+    >>> principal2.realname
+    u'fake user'
+    >>> principal2.foo
+    u'foo value'
     >>> principal2.groups
     ['fakegroup1', 'fakegroup2']
 
@@ -98,9 +98,42 @@ The user should also be returned for a getPrincipal call:
 PAU is working as expected.
 
 
+The PAS plugins
+---------------
 
-Plone should be able to make use of all this
---------------------------------------------
+    >>> from paula.pasplugins.tests.fake_pau_ap import FAKE_CREDS
+
+Paula PAS auth plugin
+
+    >>> p = portal.acl_users.paula_auth.authenticateCredentials(FAKE_CREDS)
+    >>> p
+    ('fakelogin', 'fakelogin')
+
+make a plone user
+
+    >>> from Products.PlonePAS.plugins.ufactory import PloneUser
+    >>> pu = PloneUser(p[1])
+    >>> pu
+    <PloneUser 'fakelogin'>
+
+Paula PAS properties plugin - the order might be unstable
+
+    >>> psheet = portal.acl_users.paula_properties.getPropertiesForUser(pu)
+    >>> psheet.propertyItems()[0]
+    ('foo', u'foo value')
+    >>> psheet.propertyItems()[1]
+    ('email', u'foo@bar.com')
+    >>> psheet.propertyItems()[2]
+    ('realname', u'fake user')
+    
+Paula PAS group plugin
+
+    >>> portal.acl_users.paula_groups.getGroupsForPrincipal(pu)
+    ('fakegroup1', 'fakegroup2')
+
+
+A login should be possible
+--------------------------
 
 
 
@@ -143,114 +176,6 @@ Plone should be able to make use of all this
 #Start testing
 #-------------
 #
-#Make sure all components have been registered
-#
-#    >>> from zope.app.security.interfaces import IAuthentication
-#    
-#    >>> from paula.authentication.interfaces import ILocalAuthenticatorPlugin
-#    >>> from paula.authentication.interfaces import \
-#    ...         ICredentialsFromMappingPlugin
-#    >>> from paula.authentication.interfaces import IAuthProviders
-#    >>> from paula.properties.interfaces import IPropertyProviders
-#    >>> from paula.groups.interfaces import IMemberships
-#
-#    >>> pau = getUtility(IAuthentication, context=portal)
-#    >>> pau.__parent__ = portal
-#    >>> pau
-#    <PluggableAuthentication at /plone/>
-#    >>> ap = getUtility(ILocalAuthenticatorPlugin, context=portal, 
-#    ...         name='Paula PAU AuthenticatorPlugin')
-#    >>> ap.__parent__ = portal
-#    >>> ap
-#    <AuthenticatorPlugin at /plone/>
-#    >>> cp = getUtility(ICredentialsFromMappingPlugin, context=portal, 
-#    ...         name='Paula PAU CredentialsFromMappingPlugin')
-#    >>> cp.__parent__ = portal
-#    >>> cp
-#    <CredentialsFromMappingPlugin at /plone/>
-#    >>> apu = getUtility(IAuthProviders, context=portal)
-#    >>> apu.__parent__ = portal
-#    >>> apu
-#    <RWAuthProviders at /plone/>
-#    >>> ppu = getUtility(IPropertyProviders, context=portal)
-#    >>> ppu.__parent__ = portal
-#    >>> ppu
-#    <RWPropertyProviders at /plone/>
-#    >>> mu = getUtility(IMemberships, context=portal)
-#    >>> mu.__parent__ = portal
-#    >>> mu
-#    <RWMemberships at /plone/>
-#
-#
-#Add a user to the site
-#
-#    >>> from zope.component import createObject
-#    >>> user = createObject('paula.ploneexamples.MinimalPloneUser', "user")
-#    >>> user.title = u"user"
-#    >>> user.password = u'password'
-#    >>> user.email = u"foo@bar.com"
-#    >>> user.realname = u"Foo Bar"
-#    >>> portal['user'] = user
-#
-#credentials for the user, for PAU/Paula testing
-#
-#    >>> from zope.publisher.interfaces import IRequest
-#    >>> pau_req = UserDict(login="user", password="password")
-#    >>> alsoProvides(pau_req, IRequest)
-#
-#
-#Add groups
-#
-#    >>> g1 = createObject('paula.ploneexamples.BasicGroup', 'g1')
-#    >>> g1.title = 'g1'
-#    >>> g1.members = ('user',)
-#
-#    >>> g2 = createObject('paula.ploneexamples.BasicGroup', 'g2')
-#    >>> g2.title = 'g2'
-#    >>> g2.members = ('g1',)
-#    
-#    >>> portal['g1'] = g1
-#    >>> portal['g2'] = g2
-#
-#
-#Test PAU/Paula subsystem
-#
-#    >>> principal = pau.authenticate(pau_req)
-#    >>> principal
-#    Principal('user')
-#
-#    >>> principal.email
-#    u'foo@bar.com'
-#    >>> principal.realname
-#    u'Foo Bar'
-#
-#    >>> principal.groups
-#    ['g1']
-#
-#
-#Paula PAS auth plugin
-#
-#    >>> p = portal.acl_users.paula_auth.authenticateCredentials(pau_req)
-#    >>> p
-#    ('user', 'user')
-#
-#make a plone user
-#
-#    >>> from Products.PlonePAS.plugins.ufactory import PloneUser
-#    >>> pu = PloneUser(p[1])
-#    >>> pu
-#    <PloneUser 'user'>
-#
-#Paula PAS properties plugin
-#
-#    >>> psheet = portal.acl_users.paula_properties.getPropertiesForUser(pu)
-#    >>> psheet.propertyItems()
-#    [('email', u'foo@bar.com'), ('realname', u'Foo Bar')]
-#    
-#Paula PAS group plugin
-#
-#    >>> portal.acl_users.paula_groups.getGroupsForPrincipal(pu)
-#    ('g1',)
 #
 #
 #try to authenticate
