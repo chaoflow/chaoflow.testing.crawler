@@ -3,11 +3,10 @@ import os
 
 version = '0.81'
 
-setup(name='paula.testing',
+setup(name='paula.app.testing',
       version=version,
       description="Paula testing framework",
-      long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+      long_description=open("README.txt").read()
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers = [
           'Development Status :: 2 - Pre-Alpha',
@@ -25,7 +24,7 @@ setup(name='paula.testing',
       license='AGPL',
       packages = find_packages('src'),
       package_dir = {'': 'src'},
-      namespace_packages=['paula'],
+      namespace_packages=['paula', 'paula.app'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[

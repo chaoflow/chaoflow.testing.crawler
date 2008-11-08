@@ -1,5 +1,4 @@
 Introduction
 ============
 
-paula.testing provides get_test_suite, that searches your package recursively,
-finds all python files and registers contained unit tests for testing.
+paula.app.testing provides testing stuff depending on zope.app stuff.
