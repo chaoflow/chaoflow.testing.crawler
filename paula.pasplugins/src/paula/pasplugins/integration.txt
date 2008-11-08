@@ -102,6 +102,8 @@ The PAS plugins
 ---------------
 
     >>> from paula.pasplugins.tests.fake_pau_ap import FAKE_CREDS
+    >>> from paula.pasplugins.tests.fake_pau_ap import FAKE_LOGIN
+    >>> from paula.pasplugins.tests.fake_pau_ap import FAKE_PASSWORD
 
 Paula PAS auth plugin
 
@@ -145,15 +147,21 @@ XXX: IUserEnumerationPlugin support needed!
     >>> pas.getUser(FAKE_LOGIN)
     >>> pas.getUserById(FAKE_LOGIN)
 
-    >>> from Products.PluggableAuthService.tests.test_PluggableAuthService \
-    ...		import RequestCleaner, FauxResponse
-    >>> rc = RequestCleaner()
-    >>> request = rc._makeRequest(
-    ...		RESPONSE=FauxResponse(),
-    ...		form=FAKE_CREDS,
-    ...		)
-    >>> pas.validate(request)
+#    >>> from Products.PluggableAuthService.tests.test_PluggableAuthService \
+#    ...		import RequestCleaner, FauxResponse
+#    >>> rc = RequestCleaner()
+#    >>> request = rc._makeRequest(
+#    ...		RESPONSE=FauxResponse(),
+#    ...		form=FAKE_CREDS,
+#    ...		)
 
+#    >>> from zope.publisher.browser import TestRequest
+#    >>> request = TestRequest(form=FAKE_CREDS)
+#    >>> pas.validate(request)
+
+#    >>> from Testing.makeRequest import makeRequest
+#    >>> interact( locals() )
+#
 #    >>> pas.searchUsers()
 #    >>> pas.searchGroups()
 #    >>> pas.searchPrincipals()
@@ -162,55 +170,68 @@ XXX: IUserEnumerationPlugin support needed!
 
 
 
-#Set things up (thx optilux)
-#---------------------------
-#
-#    >>> from Products.Five.testbrowser import Browser
-#    >>> browser = Browser()
-#    >>> portal_url = self.portal.absolute_url()
-#
-#The following is useful when writing and debugging testbrowser tests. It lets
-#us see error messages properly.
-#
-#    >>> browser.handleErrors = False
-#    >>> self.portal.error_log._ignored_exceptions = ()
-#
-#We then turn off the various portlets, because they sometimes duplicate links
-#and text (e.g. the navtree, the recent recent items listing) that we wish to
-#test for in our own views. Having no portlets makes things easier.
-#
-#    >>> from zope.component import getMultiAdapter, getUtility
-#    >>> from plone.portlets.interfaces import IPortletManager
-#    >>> from plone.portlets.interfaces import IPortletAssignmentMapping
-#
-#    >>> left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
-#    >>> left_assignable = getMultiAdapter((self.portal, left_column), IPortletAssignmentMapping)
-#    >>> for name in left_assignable.keys():
-#    ...     del left_assignable[name]
-#
-#    >>> right_column = getUtility(IPortletManager, name=u"plone.rightcolumn")
-#    >>> right_assignable = getMultiAdapter((self.portal, right_column), IPortletAssignmentMapping)
-#    >>> for name in right_assignable.keys():
-#    ...     del right_assignable[name]
-#
-#
-#Start testing
-#-------------
-#
-#
-#
-#try to authenticate
-#
+Set things up (thx optilux)
+---------------------------
+
+    >>> from Products.Five.testbrowser import Browser
+    >>> browser = Browser()
+    >>> portal_url = self.portal.absolute_url()
+
+The following is useful when writing and debugging testbrowser tests. It lets
+us see error messages properly.
+
+    >>> browser.handleErrors = False
+    >>> self.portal.error_log._ignored_exceptions = ()
+
+We then turn off the various portlets, because they sometimes duplicate links
+and text (e.g. the navtree, the recent recent items listing) that we wish to
+test for in our own views. Having no portlets makes things easier.
+
+    >>> from zope.component import getMultiAdapter, getUtility
+    >>> from plone.portlets.interfaces import IPortletManager
+    >>> from plone.portlets.interfaces import IPortletAssignmentMapping
+
+    >>> left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
+    >>> left_assignable = getMultiAdapter(
+    ...		(self.portal, left_column),
+    ...		IPortletAssignmentMapping,
+    ...		)
+    >>> for name in left_assignable.keys():
+    ...     del left_assignable[name]
+
+    >>> right_column = getUtility(IPortletManager, name=u"plone.rightcolumn")
+    >>> right_assignable = getMultiAdapter(
+    ...		(self.portal, right_column),
+    ...		IPortletAssignmentMapping,
+    ...		)
+    >>> for name in right_assignable.keys():
+    ...     del right_assignable[name]
+
+
+add a "regular" user
+
+#    >>> portal.acl_users.source_users.addUser('honk', 'honk', 'honk')
 #    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
-#    >>> browser.getControl(name='__ac_name').value = u"user"
-#    >>> browser.getControl(name='__ac_password').value = u"wrong"
+#    >>> browser.getControl(name='__ac_name').value = 'honk'
+#    >>> browser.getControl(name='__ac_password').value = 'honk'
+#    >>> browser.getControl(name='submit').click()
+#
+#    >>> interact( locals() )
+
+try to authenticate
+
+#    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
+#    >>> browser.getControl(name='__ac_name').value = FAKE_LOGIN
+#    >>> browser.getControl(name='__ac_password').value = FAKE_PASSWORD+'foo'
 #    >>> browser.getControl(name='submit').click()
 #    >>> 'Login failed' in browser.contents
 #    True
-#
-#    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
-#    >>> browser.getControl(name='__ac_name').value = u"user"
-#    >>> browser.getControl(name='__ac_password').value = u"password"
-#    >>> browser.getControl(name='submit').click()
-#    >>> 'Login failed' in browser.contents
-#    False
+
+    >>> interact( locals() )
+
+    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
+    >>> browser.getControl(name='__ac_name').value = FAKE_LOGIN
+    >>> browser.getControl(name='__ac_password').value = FAKE_PASSWORD
+    >>> browser.getControl(name='submit').click()
+
+    >>> interact( locals() )
