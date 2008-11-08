@@ -7,6 +7,7 @@
      version="20081108-01"
      handler="paula.pasplugins.setuphandlers.setupPlugins"
      >
+    <dependency step="componentregistry" />
     Install Paula PAS Plugins
   </import-step>
 

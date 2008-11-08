@@ -30,7 +30,7 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces.plugins \
     import IAuthenticationPlugin
 
-from zope.app.security.interfaces import IAuthentication
+from zope.app.authentication.interfaces import IPluggableAuthentication
 from zope.interface import implements, alsoProvides
 from zope.component import getUtility
 from zope.publisher.interfaces import IRequest
@@ -83,15 +83,15 @@ class AuthenticationPlugin(BasePlugin):
 
             >>> p = Mock(id = 'login')
         
-        Mockup IAuthentication
+        Mockup IPluggableAuthentication
 
             >>> au = Mock(authenticate = \\
             ...         lambda x : IRequest.providedBy(x) \\
             ...             and x.has_key('login') \\
             ...             and x.has_key('password') \\
             ...             and p,
-            ...         alsoProvides=(IAuthentication,))
-            >>> provideUtility(au, IAuthentication)
+            ...         alsoProvides=(IPluggableAuthentication,))
+            >>> provideUtility(au, IPluggableAuthentication)
 
         our authentication plugin
 
@@ -116,7 +116,7 @@ class AuthenticationPlugin(BasePlugin):
             >>> ap.authenticateCredentials(creds) is None
             True
         """
-        pau = getUtility(IAuthentication)
+        pau = getUtility(IPluggableAuthentication)
 
         # pau expects something providing request
         # our fake credentials plugin is fine with a mapping

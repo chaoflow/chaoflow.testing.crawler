@@ -2,21 +2,6 @@
 <componentregistry>
  <adapters />
  <utilities>
-   <!--
-   <utility
-     interface="zope.app.security.interfaces.IAuthentication"
-     factory="paula.pasplugins.utils.PluggableAuthentication"
-     />
-   <utility
-     interface="zope.app.authentication.interfaces.IPluggableAuthentication"
-     factory="paula.pasplugins.utils.PluggableAuthentication"
-     />
-   <utility
-     interface="paula.authentication.interfaces.ICredentialsFromMappingPlugin"
-     factory="paula.pasplugins.plugins.paucred.CredentialsFromMappingPlugin"
-     name="Paula: PAU CredentialsFromMappingPlugin"
-     />
-   -->
    <utility
      interface="zope.app.authentication.interfaces.IPluggableAuthentication"
      factory="zope.app.authentication.authentication.PluggableAuthentication"

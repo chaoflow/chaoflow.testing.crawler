@@ -10,6 +10,9 @@ from Products.PluggableAuthService.interfaces.plugins \
      import IAuthenticationPlugin
 from Products.PlonePAS.Extensions.Install import activatePluginInterfaces
 
+from zope.app.authentication.interfaces import IPluggableAuthentication
+from zope.component import getUtility
+
 
 def _setupPlugins(portal, out):
     """
@@ -17,7 +20,7 @@ def _setupPlugins(portal, out):
     """
     uf = getToolByName(portal, 'acl_users')
 
-    paula = uf.manage_addProduct['paula.plonepas']
+    paula = uf.manage_addProduct['paula.pasplugins']
     existing = uf.objectIds()
 
     if 'paula_auth' not in existing:
@@ -37,6 +40,13 @@ def _setupPlugins(portal, out):
         paula.addGroupsPlugin('paula_groups')
         print >> out, "Added Paula PAS Groups Plugin."
         activatePluginInterfaces(portal, 'paula_groups', out)
+
+    credplugname = 'Paula: PAU CredentialsFromMappingPlugin'
+    pau = getUtility(IPluggableAuthentication)
+    if credplugname not in pau.credentialsPlugins:
+        pau.credentialsPlugins = tuple(
+                list(pau.credentialsPlugins) + [credplugname]
+                )
 
 
 def setupPlugins(context):

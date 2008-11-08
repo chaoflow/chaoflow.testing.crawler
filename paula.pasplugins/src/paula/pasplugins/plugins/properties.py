@@ -31,7 +31,7 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces.plugins \
     import IPropertiesPlugin
 
-from zope.app.security.interfaces import IAuthentication
+from zope.app.authentication.interfaces import IPluggableAuthentication
 from zope.app.security.interfaces import PrincipalLookupError
 from zope.component import getUtility
 from zope.interface import alsoProvides, implements
@@ -119,12 +119,12 @@ class PropertiesPlugin(BasePlugin):
         
             >>> p = MockPrincipal()
 
-        Mockup IAuthentication
+        Mockup IPluggableAuthentication
 
             >>> from zope.component import provideUtility
             >>> au = Mock(getPrincipal = lambda x : x == "login" and p)
-            >>> alsoProvides(au, IAuthentication)
-            >>> provideUtility(au, IAuthentication)
+            >>> alsoProvides(au, IPluggableAuthentication)
+            >>> provideUtility(au, IPluggableAuthentication)
 
         our property plugin
 
@@ -148,7 +148,7 @@ class PropertiesPlugin(BasePlugin):
             {}
         """
         # get principal from pau
-        pau = getUtility(IAuthentication)
+        pau = getUtility(IPluggableAuthentication)
         try:
             principal = pau.getPrincipal(user.getId())
         except PrincipalLookupError:

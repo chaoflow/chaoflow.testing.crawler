@@ -23,13 +23,13 @@ from config import PACKAGE_NAME
 
 tests = [
         # Demonstrate the main content types
-#        ztc.ZopeDocFileSuite(
-#            'README.txt', package='paula.pasplugins',
-#            test_class=base.PaulaFunctionalTestCase,
-#            globs=test_globs,
-#            optionflags= \
-#                    doctest.NORMALIZE_WHITESPACE | \
-#                    doctest.ELLIPSIS),
+        ztc.ZopeDocFileSuite(
+            'integration.txt', package='paula.pasplugins',
+            test_class=base.PaulaFunctionalTestCase,
+            globs=test_globs,
+            optionflags= \
+                    doctest.NORMALIZE_WHITESPACE | \
+                    doctest.ELLIPSIS),
     ]
 
 

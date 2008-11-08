@@ -24,6 +24,8 @@ from zope.app.authentication.interfaces import ICredentialsPlugin
 from zope.interface import implements, alsoProvides
 from zope.publisher.interfaces import IRequest
 
+CREDPLUG_NAME = "Paula: PAU CredentialsFromMappingPlugin"
+
 
 class CredentialsFromMappingPlugin(object):
     """Just returns a mapping it is passed

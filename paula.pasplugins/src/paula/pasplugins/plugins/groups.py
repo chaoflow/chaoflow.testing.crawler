@@ -31,7 +31,7 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces.plugins \
     import IGroupsPlugin
 
-from zope.app.security.interfaces import IAuthentication
+from zope.app.authentication.interfaces import IPluggableAuthentication
 from zope.app.security.interfaces import PrincipalLookupError
 from zope.component import getUtility
 from zope.interface import implements
@@ -79,7 +79,7 @@ class GroupsPlugin(BasePlugin):
         o May assign groups based on values in the REQUEST object, if present
         """
         # get principal from pau
-        pau = getUtility(IAuthentication)
+        pau = getUtility(IPluggableAuthentication)
         try:
             p = pau.getPrincipal(principal.getId())
         except PrincipalLookupError:

@@ -20,14 +20,21 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
+from UserDict import UserDict
+
 # this should be moved from zope.app.authentication to zope.authentication
 from zope.app.authentication.interfaces import IAuthenticatorPlugin
 from zope.app.authentication.principalfolder import PrincipalInfo
 
-from zope.interface import implements
+from zope.interface import implements, alsoProvides
+from zope.publisher.interfaces import IRequest
 
 FAKE_LOGIN = 'fakelogin'
 FAKE_PASSWORD = 'fakepassword'
+FAKE_REQUEST = UserDict(login=FAKE_LOGIN, password=FAKE_PASSWORD)
+alsoProvides(FAKE_REQUEST, IRequest)
+
+AUTHPLUG_NAME = "Paula: Fake PAU AuthenticatorPlugin - Do not use!"
 
 
 class AuthenticatorPlugin(object):
