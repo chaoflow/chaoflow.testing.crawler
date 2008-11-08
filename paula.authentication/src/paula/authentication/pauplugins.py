@@ -21,7 +21,6 @@ __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
 # this should be moved from zope.app.authentication to zope.authentication
-from zope.app.authentication.interfaces import ICredentialsPlugin
 from zope.app.authentication.principalfolder import PrincipalInfo
 
 from zope.app.container.contained import Contained
@@ -32,7 +31,6 @@ from zope.publisher.interfaces import IRequest
 from paula.authentication.interfaces import IAuthProviders
 from paula.authentication.interfaces import IAuthenticatorPlugin
 from paula.authentication.interfaces import ILocalAuthenticatorPlugin
-from paula.authentication.interfaces import ICredentialsFromMappingPlugin
 
 
 class AuthenticatorPlugin(object):
@@ -147,41 +145,3 @@ class LocalAuthenticatorPlugin(
 #        ComponentLookupError...
 #        """
 #        return getUtility(IAuthProviders, context=getSite())
-
-
-class CredentialsFromMappingPlugin(Contained):
-    """Just returns a mapping it is passed
-
-    Useful, if you use paula and PAU just for authentication but not for
-    challenging, i.e./e.g. from PlonePAS you already get the credentials in a
-    mapping and don't need to bother with challenging.
-
-    May be registered globally, as only functionality is implemented.
-
-        >>> cp = CredentialsFromMappingPlugin()
-        >>> m = UserDict()
-        >>> c = cp.extractCredentials(m)
-        >>> c is m
-        True
-        >>> IRequest.providedBy(m)
-        True
-    """
-    implements(ICredentialsFromMappingPlugin)
-    
-    def extractCredentials(self, mapping):
-        """
-        """
-        # tune the mapping, PAU needs an IRequest to find its factories
-        # If this does not work, better let the AttributeError go here, than
-        # later in the getMultiAdapter lookup of PAU
-        if not IRequest.providedBy(mapping):
-            alsoProvides(mapping, IRequest)
-
-        return mapping
-    
-    def challenge(self, request):
-        pass # challenge is a no-op for this plugin
-    
-    def logout(self, request):
-        pass # logout is a no-op for this plugin
-

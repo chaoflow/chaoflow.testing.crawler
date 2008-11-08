@@ -20,136 +20,12 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
-# this should be moved from zope.app.authentication to zope.authentication
 from zope.app.authentication.interfaces import ICredentialsPlugin
-from zope.app.authentication.principalfolder import PrincipalInfo
-
-from zope.app.container.contained import Contained
 from zope.interface import implements, alsoProvides
-from zope.component import getUtility
 from zope.publisher.interfaces import IRequest
 
-from paula.authentication.interfaces import IAuthProviders
-from paula.authentication.interfaces import IAuthenticatorPlugin
-from paula.authentication.interfaces import ILocalAuthenticatorPlugin
-from paula.authentication.interfaces import ICredentialsFromMappingPlugin
 
-
-class AuthenticatorPlugin(object):
-    """Authenticate users with auth providers from an IAuthProviders
-    
-    May be registered globally, as only functionality is implemented.
-
-        >>> import UserDict
-        >>> apu = UserDict.UserDict()
-        >>> alsoProvides(apu, IAuthProviders)
-        >>> provideUtility(apu)
-
-        >>> m = Mock(
-        ...         id='login',
-        ...         validate = lambda login=None,password=None: \\
-        ...                 password == 'correct',
-        ...         )
-
-        >>> apu['login'] = m
-        
-        >>> ap = AuthenticatorPlugin()
-
-        >>> p = ap.authenticateCredentials(None)
-        >>> p is None
-        True
-
-        >>> credentials = {
-        ...     'login': 'login',
-        ...     }
-        >>> p = ap.authenticateCredentials(credentials)
-        >>> p is None
-        True
-
-        >>> credentials = {
-        ...     'password': 'correct',
-        ...     }
-        >>> p = ap.authenticateCredentials(credentials)
-        >>> p is None
-        True
-
-        >>> credentials = {
-        ...     'login': 'wrong',
-        ...     'password': 'correct',
-        ...     }
-        >>> p = ap.authenticateCredentials(credentials)
-        >>> p is None
-        True
-
-        >>> credentials['login'] = 'login'
-        >>> p = ap.authenticateCredentials(credentials)
-        >>> from zope.app.authentication.interfaces import IPrincipalInfo
-        >>> IPrincipalInfo.providedBy(p)
-        True
-        >>> p.id
-        'login'
-
-        >>> credentials['password'] = 'wrong'
-        >>> p = ap.authenticateCredentials(credentials)
-        >>> p is None
-        True
-    """
-    implements(IAuthenticatorPlugin)
-
-    def _getAPU(self):
-        """
-        """
-        return getUtility(IAuthProviders)
-
-    def authenticateCredentials(self, creds):
-        try:
-            if not (creds.has_key('login') and creds.has_key('password')):
-                return None
-        except AttributeError:
-            return None
-        
-        # retrieve auth provider utility
-        apu = self._getAPU()
-        id = creds["login"]
-        try:
-            # retrieve auth provider for principal
-            ap = apu[id]
-        except KeyError:
-            return None
-
-        # use authprovider to verify credentials
-        if not ap.validate(login=creds['login'],password=creds['password']):
-            return None
-
-        login = id
-        title = description = u""
-        return PrincipalInfo( id, login, title, description)
-
-    def principalInfo(self, id):
-        apu = self._getAPU()
-        if not id in apu:
-            return None
-        login = id
-        title = description = u""
-        return PrincipalInfo( id, login, title, description)
-
-
-class LocalAuthenticatorPlugin(
-        AuthenticatorPlugin,
-        Contained,
-        ):
-    """XXX: still not sure whether this could be the same as AP
-    """
-    implements(ILocalAuthenticatorPlugin)
-
-#    def _getAPU(self):
-#        """when doing this in the version above, I am getting a
-#        ComponentLookupError...
-#        """
-#        return getUtility(IAuthProviders, context=getSite())
-
-
-class CredentialsFromMappingPlugin(Contained):
+class CredentialsFromMappingPlugin(object):
     """Just returns a mapping it is passed
 
     Useful, if you use paula and PAU just for authentication but not for
@@ -166,7 +42,7 @@ class CredentialsFromMappingPlugin(Contained):
         >>> IRequest.providedBy(m)
         True
     """
-    implements(ICredentialsFromMappingPlugin)
+    implements(ICredentialsPlugin)
     
     def extractCredentials(self, mapping):
         """

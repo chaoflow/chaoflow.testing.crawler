@@ -22,9 +22,8 @@ __docformat__ = "plaintext"
 
 from zope.interface import Interface
 from zope.schema import TextLine
-
 from zope.app.authentication.interfaces import IAuthenticatorPlugin as IPauAP
-from zope.app.authentication.interfaces import ICredentialsPlugin
+
 
 class IAuthenticatorPlugin(IPauAP):
     """A paula authenticator plugin for PAU
@@ -33,14 +32,6 @@ class IAuthenticatorPlugin(IPauAP):
 class ILocalAuthenticatorPlugin(IAuthenticatorPlugin):
     """A context-aware paula authenticator plugin for PAU
     """
-
-class ICredentialsFromMappingPlugin(ICredentialsPlugin):
-    """Marks a credentials plugin, that simply returns a mapping it
-    receives, after making sure, that it provides IRequest
-
-    This is needed by PAU to find its factories.
-    """
-
 
 class IPrincipalId(Interface):
     """A principals unique id
