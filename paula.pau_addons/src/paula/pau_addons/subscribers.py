@@ -20,14 +20,9 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
-from zope.app.authentication.interfaces import IPrincipalCreated
-
-from zope.component import adapter, queryUtility
 from zope.interface import alsoProvides
 
 from paula.properties.interfaces import IPropertyInterface
-from paula.properties.interfaces import IPropertyProvider
-from paula.properties.interfaces import IPropertyProviders
 
 def _copy_attributes_from_ppu( principal, pps):
     """
@@ -116,25 +111,3 @@ def _copy_attributes_from_ppu( principal, pps):
             #     Principals exist at all.
             #prop = property( lambda self: getattr(principal, name))
             #setattr(user, name, prop)
-
-
-@adapter(IPrincipalCreated)
-def setPropertiesForPrincipal(event):
-    """Put properties onto the principal
-
-    The properties are directly stored as attributes. Magic happens in
-    _copy_attributes_from_ppu, here we just get the utility and are tested
-    in README.txt
-    """
-    principal = event.principal
-    # we search for a property provider utility in the context of the auth
-    # plugin that authenticated the principal, if there is none, we do
-    # nothing
-    ppu = queryUtility(
-            IPropertyProviders,
-    #        context=getSite(),
-            )
-    # XXX: for some reason a ppu is False
-    if ppu is not None and principal.id in ppu:
-        pps = ppu[principal.id]
-        _copy_attributes_from_ppu( principal, pps)

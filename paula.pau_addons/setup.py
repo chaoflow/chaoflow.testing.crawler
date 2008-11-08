@@ -3,11 +3,10 @@ import os
 
 version = '0.60'
 
-setup(name='paula.properties',
+setup(name='paula.pau_addons',
       version=version,
       description="Paula subscriber to set PAU principal properties",
-      long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+      long_description=open("README.txt").read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers = [
           'Development Status :: 2 - Pre-Alpha',
@@ -31,8 +30,6 @@ setup(name='paula.properties',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
-          'zope.app.authentication',
-          'zope.component',
           'zope.interface',
           'zope.schema',
       ],
