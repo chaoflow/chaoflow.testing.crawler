@@ -3,11 +3,11 @@ import os
 
 version = '0.60'
 
-setup(name='paula.plonepas',
+setup(name='paula.pasplugins',
       version=version,
-      description="Paula PlonePAS plugins facilitating PAU",
-      long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+      description="Paula: PAS plugins facilitating PAU",
+      long_description=open("README.txt").read() # + "\n" +
+      #                 open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers = [
           'Development Status :: 2 - Pre-Alpha',
@@ -35,7 +35,7 @@ setup(name='paula.plonepas',
           'zope.interface',
           'zope.schema',
           'zope.app.authentication',
-          'paula.suite>=0.59',
+          'paula.properties>=0.59',
           'paula.testing>=0.59',
       ],
       entry_points="""

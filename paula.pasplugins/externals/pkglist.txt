@@ -1,10 +1,2 @@
-paula.authentication
-paula.authutil
-paula.groups
-paula.grouputil
 paula.properties
-paula.proputil
-paula.suite
-paula.examples
-paula.ploneexamples
 paula.testing

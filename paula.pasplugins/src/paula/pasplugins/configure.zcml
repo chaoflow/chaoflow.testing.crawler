@@ -5,12 +5,16 @@
 
   <five:registerPackage package="." initialize=".initialize" />
 
-  <include package="paula.suite" />
   <adapter
     factory="zope.app.authentication.principalfolder.AuthenticatedPrincipalFactory"
     />
   <adapter
     factory="zope.app.authentication.principalfolder.FoundPrincipalFactory"
+    />
+
+  <utility
+    factory="paula.pasplugins.plugins.paucred.CredentialsFromMappingPlugin"
+    name="Paula: PAU CredentialsFromMappingPlugin"
     />
 
   <include file="profiles.zcml" />

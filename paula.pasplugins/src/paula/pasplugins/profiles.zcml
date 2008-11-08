@@ -5,9 +5,9 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="Paula PlonePAS"
+      title="Paula: PAS Plugins"
       directory="profiles/default"
-      description='Extension profile for Paula PlonePAS.'
+      description='Extension profile for Paula: PAS Plugins.'
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 

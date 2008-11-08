@@ -14,7 +14,7 @@ from Testing import ZopeTestCase as ztc
 
 from paula.testing import get_test_suite, test_globs
 
-from paula.plonepas.tests import plone_base as base
+from paula.pasplugins.tests import plone_base as base
 
 # XXX: this could be derived from __name__, but then it would not work,
 # if being called as __main__ (see bottom) - is that needed?
@@ -23,13 +23,13 @@ from config import PACKAGE_NAME
 
 tests = [
         # Demonstrate the main content types
-        ztc.ZopeDocFileSuite(
-            'README.txt', package='paula.plonepas',
-            test_class=base.PaulaFunctionalTestCase,
-            globs=test_globs,
-            optionflags= \
-                    doctest.NORMALIZE_WHITESPACE | \
-                    doctest.ELLIPSIS),
+#        ztc.ZopeDocFileSuite(
+#            'README.txt', package='paula.pasplugins',
+#            test_class=base.PaulaFunctionalTestCase,
+#            globs=test_globs,
+#            optionflags= \
+#                    doctest.NORMALIZE_WHITESPACE | \
+#                    doctest.ELLIPSIS),
     ]
 
 

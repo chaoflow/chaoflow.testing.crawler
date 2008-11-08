@@ -3,22 +3,11 @@
 
   <import-step
      id="plugins"
-     title="Paula plugins"
-     version="20080814-01"
-     handler="paula.plonepas.setuphandlers.setupPlugins"
+     title="Paula: PAS Plugins"
+     version="20081108-01"
+     handler="paula.pasplugins.setuphandlers.setupPlugins"
      >
-   <dependency step="Paule Suite" />
-    Install Paula PAS plug-ins
-  </import-step>
-
-  <import-step
-     id="paulsuite"
-     title="Paula Suite"
-     version="20080814-01"
-     handler="paula.plonepas.setuphandlers.createPaulaSuite"
-     >
-   <dependency step="componentregistry" />
-    Install Paula Suite
+    Install Paula PAS Plugins
   </import-step>
 
 </import-steps>

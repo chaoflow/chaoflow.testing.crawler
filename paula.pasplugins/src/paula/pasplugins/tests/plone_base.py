@@ -10,7 +10,7 @@ from plone.app.controlpanel.tests import ControlPanelTestCase
 from kss.core.tests.base import KSSLayer, KSSViewTestCase
 
 @onsetup
-def setup_paula_plonepas():
+def setup_paula_pasplugins():
     """Set up the additional products required for the Optilux Cinema Content.
     
     The @onsetup decorator causes the execution of this body to be deferred
@@ -21,22 +21,22 @@ def setup_paula_plonepas():
     # This includes the other products below as well.
     
     fiveconfigure.debug_mode = True
-    import paula.plonepas
-    zcml.load_config('configure.zcml', paula.plonepas)
+    import paula.pasplugins
+    zcml.load_config('configure.zcml', paula.pasplugins)
     fiveconfigure.debug_mode = False
     
     # We need to tell the testing framework that these products
     # should be available. This can't happen until after we have loaded
     # the ZCML.
     
-    ztc.installPackage('paula.plonepas')
+    ztc.installPackage('paula.pasplugins')
     
 # The order here is important: We first call the (deferred) function which
 # installs the products we need for the Optilux package. Then, we let 
 # PloneTestCase set up this product on installation.
 
-setup_paula_plonepas()
-ptc.setupPloneSite(products=['paula.plonepas'])
+setup_paula_pasplugins()
+ptc.setupPloneSite(products=['paula.pasplugins'])
 
 class PaulaTestCase(ptc.PloneTestCase):
     """Base class used for test cases

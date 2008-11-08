@@ -24,9 +24,9 @@ __docformat__ = "plaintext"
 from AccessControl.Permissions import add_user_folders
 from Products.PluggableAuthService import registerMultiPlugin
 
-from paula.plonepas.plugins import auth
-from paula.plonepas.plugins import groups
-from paula.plonepas.plugins import properties
+from paula.pasplugins.plugins import auth
+from paula.pasplugins.plugins import groups
+from paula.pasplugins.plugins import properties
 
 
 def initialize(context):
