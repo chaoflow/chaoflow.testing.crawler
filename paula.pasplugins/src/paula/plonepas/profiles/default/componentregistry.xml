@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<componentregistry>
+ <adapters/>
+ <utilities>
+   <utility
+     interface="zope.app.security.interfaces.IAuthentication"
+     factory="paula.plonepas.utils.PluggableAuthentication"
+     />
+   <utility
+     interface="zope.app.authentication.interfaces.IPluggableAuthentication"
+     factory="paula.plonepas.utils.PluggableAuthentication"
+     />
+   <utility
+     interface="paula.authentication.interfaces.ICredentialsFromMappingPlugin"
+     factory="paula.plonepas.utils.CredentialsFromMappingPlugin"
+     name="Paula PAU CredentialsFromMappingPlugin"
+     />
+   <utility
+     interface="paula.authentication.interfaces.ILocalAuthenticatorPlugin"
+     factory="paula.plonepas.utils.AuthenticatorPlugin"
+     name="Paula PAU AuthenticatorPlugin"
+     />
+   <utility
+     interface="paula.authutil.interfaces.IRWAuthProviders"
+     factory="paula.plonepas.utils.RWAuthProviders"
+     />
+   <utility
+     interface="paula.grouputil.interfaces.IRWMemberships"
+     factory="paula.plonepas.utils.RWMemberships"
+     />
+   <utility
+     interface="paula.proputil.interfaces.IRWPropertyProviders"
+     factory="paula.plonepas.utils.RWPropertyProviders"
+     />
+ </utilities>
+</componentregistry>
