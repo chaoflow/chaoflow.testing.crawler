@@ -21,16 +21,15 @@ __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
 from zope.interface import alsoProvides
+from paula.pau_addons.interfaces import IPropertyInterface
 
-from paula.properties.interfaces import IPropertyInterface
-
-def _copy_attributes_from_ppu( principal, pps):
+def copy_properties( src, dest):
     """
-    A mockup principal
+    A mockup destination
 
-        >>> p = Mock(id='1')
+        >>> dest = Mock(id='1')
 
-    A mockup property provider
+    A mockup source
 
         >>> class IA(Interface):
         ...     a1 = Attribute(u"a1")
@@ -44,7 +43,7 @@ def _copy_attributes_from_ppu( principal, pps):
         >>> class IC(Interface):
         ...     c = Attribute(u"c")
 
-        >>> pp1 = Mock(
+        >>> src = Mock(
         ...         a1=1,
         ...         a2=2,
         ...         b=3,
@@ -52,62 +51,44 @@ def _copy_attributes_from_ppu( principal, pps):
         ...         alsoProvides=(IA,IB),
         ...         )
 
-    And another one
-
-        >>> class ID(Interface):
-        ...     d = Attribute(u"d")
-        >>> alsoProvides(ID, IPropertyInterface)
-
-        >>> pp2 = Mock(d=4, alsoProvides=(ID,))
-
-    A list of property provider utilities
-
-        >>> pps = [pp1, pp2]
-
     Call and check which attributes made it
 
-        >>> _copy_attributes_from_ppu(p, pps)
-        >>> IA.providedBy(p)
+        >>> copy_properties(src, dest)
+        >>> IA.providedBy(dest)
         True
-        >>> IB.providedBy(p)
+        >>> IB.providedBy(dest)
         True
-        >>> IC.providedBy(p)
+        >>> IC.providedBy(dest)
         False
-        >>> ID.providedBy(p)
-        True
-        >>> p.a1
+        >>> dest.a1
         1
-        >>> p.a2
+        >>> dest.a2
         2
-        >>> p.b
+        >>> dest.b
         3
-        >>> getattr(p, 'c', 'foo')
+        >>> getattr(dest, 'c', 'foo')
         'foo'
-        >>> p.d
-        4
     """
-    for pp in pps:
-        schemas = list(pp.__provides__)
-        for schema in schemas:
-            # only use interfaces that defined properties
-            if not IPropertyInterface.providedBy(schema):
-                continue
-            # iterate over schema fields and copy values
-            # also see comment below, dynamic lookup would be great
-            for name in list(schema):
-                value = getattr(schema(pp), name)
-                setattr(principal, name, value)
-            alsoProvides(principal, schema)
+    schemas = list(src.__provides__)
+    for schema in schemas:
+        # only use interfaces that defined properties
+        if not IPropertyInterface.providedBy(schema):
+            continue
+        # iterate over schema fields and copy values
+        # also see comment below, dynamic lookup would be great
+        for name in list(schema):
+            value = getattr(schema(src), name)
+            setattr(dest, name, value)
+        alsoProvides(dest, schema)
 
-
-            #XXX: this is not working, as property object most probably
-            #     do magic inside of __getattr__ and rely on classes to
-            #     interpret them correctly.
-            #     Another way would be to monkey-patch user's
-            #     __getattr__...
-            #     For now we leave it static, i.e. the values are taken
-            #     only once and are not dynamically updated. Not sure,
-            #     whether it is useful anyway, as I don't know how long
-            #     Principals exist at all.
-            #prop = property( lambda self: getattr(principal, name))
-            #setattr(user, name, prop)
+        #XXX: this is not working, as property object most probably
+        #     do magic inside of __getattr__ and rely on classes to
+        #     interpret them correctly.
+        #     Another way would be to monkey-patch user's
+        #     __getattr__...
+        #     For now we leave it static, i.e. the values are taken
+        #     only once and are not dynamically updated. Not sure,
+        #     whether it is useful anyway, as I don't know how long
+        #     Principals exist at all.
+        #prop = property( lambda self: getattr(principal, name))
+        #setattr(user, name, prop)

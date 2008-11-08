@@ -24,8 +24,6 @@ from zope.interface import Interface
 from zope.interface.interfaces import IInterface
 from zope.schema import TextLine
 
-
 class IPropertyInterface(IInterface):
-    """Interfaces providing this interface are recognizes as interfaces defining
-    properties.
+    """Interfaces providing this are interfaces defining properties.
     """
