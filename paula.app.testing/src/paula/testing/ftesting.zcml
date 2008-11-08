@@ -1,0 +1,10 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:meta="http://namespaces.zope.org/meta"
+    >
+
+  <!-- Turn on the devmode -->
+  <meta:provides feature="devmode" />
+  <include package="paula.testing" />
+
+</configure>
