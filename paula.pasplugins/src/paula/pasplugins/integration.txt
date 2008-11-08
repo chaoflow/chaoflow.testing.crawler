@@ -132,10 +132,31 @@ Paula PAS group plugin
     ('fakegroup1', 'fakegroup2')
 
 
-A login should be possible
---------------------------
+Walk through the PAS API
+------------------------
 
+    >>> from paula.pasplugins.tests.fake_pau_ap import FAKE_LOGIN
+    >>> pas = portal.acl_users
 
+These are currently the same and unsupported
+
+XXX: IUserEnumerationPlugin support needed!
+
+    >>> pas.getUser(FAKE_LOGIN)
+    >>> pas.getUserById(FAKE_LOGIN)
+
+    >>> from Products.PluggableAuthService.tests.test_PluggableAuthService \
+    ...		import RequestCleaner, FauxResponse
+    >>> rc = RequestCleaner()
+    >>> request = rc._makeRequest(
+    ...		RESPONSE=FauxResponse(),
+    ...		form=FAKE_CREDS,
+    ...		)
+    >>> pas.validate(request)
+
+#    >>> pas.searchUsers()
+#    >>> pas.searchGroups()
+#    >>> pas.searchPrincipals()
 
 
 
