@@ -6,7 +6,7 @@ version = '0.60'
 setup(name='paula.pasplugins',
       version=version,
       description="Paula: PAS plugins facilitating PAU",
-      long_description=open("README.txt").read() # + "\n" +
+      long_description=open("README.txt").read(), # + "\n" +
       #                 open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers = [
