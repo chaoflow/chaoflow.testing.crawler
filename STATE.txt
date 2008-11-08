@@ -29,6 +29,7 @@ DONE:
 
 
 TODO/IDEAS:
+    - find nice solution for: svn:ignore <-> .gitignore
     - fix login: strangely the test seem to pass, but a real login does not
       work
     - handle id collisions between users and groups
