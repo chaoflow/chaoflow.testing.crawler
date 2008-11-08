@@ -21,13 +21,10 @@ __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
 from zope.app.authentication.interfaces import IPrincipalCreated
-from zope.app.component.hooks import getSite
-
 from zope.security.interfaces import IGroupAwarePrincipal
 from zope.component import adapter, queryUtility
 
-from paula.groups.interfaces import IMemberships
-
+from paula.pasplugins.tests.fake_pau_ap import FAKE_LOGIN
 
 @adapter(IPrincipalCreated)
 def setGroupsForPrincipal(event):
@@ -36,17 +33,6 @@ def setGroupsForPrincipal(event):
     principal = event.principal
     if not IGroupAwarePrincipal.providedBy(principal):
         return None
-
-    # we search for a group membership utility in the context of the auth
-    # plugin that authenticated the principal, if there is none, we do
-    # nothing
-    mu = queryUtility(
-            IMemberships,
-    #        context=getSite(),
-            )
-    # XXX: for some reason a mu is False
-    if mu is None:
-        return
-    
-    groups = mu.getGroupsForPrincipal(principal.id)
-    principal.groups.extend(groups)
+   
+    if principal.id == FAKE_LOGIN:
+        principal.groups.extend(['fakegroup1', 'fakegroup2'])

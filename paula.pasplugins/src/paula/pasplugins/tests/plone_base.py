@@ -22,7 +22,7 @@ def setup_paula_pasplugins():
     
     fiveconfigure.debug_mode = True
     import paula.pasplugins
-    zcml.load_config('configure.zcml', paula.pasplugins)
+    zcml.load_config('ftesting.zcml', paula.pasplugins)
     fiveconfigure.debug_mode = False
     
     # We need to tell the testing framework that these products

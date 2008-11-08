@@ -16,14 +16,6 @@
     factory="paula.pasplugins.plugins.paucred.CredentialsFromMappingPlugin"
     name="Paula: PAU CredentialsFromMappingPlugin"
     />
-  <!-- Programmatically registered for testing in integration.txt,
-        support for ftesting.zcml would be nice. Probably it exists and it
-        just me again, not knowing about it...
-  <utility
-    factory="paula.pasplugins.tests.fake_pau_ap.AuthenticatorPlugin"
-    name="Paula: Fake PAU AuthenticatorPlugin - Do not use!"
-    />
-  -->
 
   <include file="profiles.zcml" />
 

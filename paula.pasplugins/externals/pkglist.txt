@@ -1,2 +1,2 @@
-paula.properties
+paula.pau_addons
 paula.testing

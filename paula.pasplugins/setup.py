@@ -35,7 +35,7 @@ setup(name='paula.pasplugins',
           'zope.interface',
           'zope.schema',
           'zope.app.authentication',
-          'paula.properties>=0.59',
+          'paula.pau_addons>=0.59',
           'paula.testing>=0.59',
       ],
       entry_points="""

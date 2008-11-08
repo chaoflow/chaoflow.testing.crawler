@@ -36,7 +36,7 @@ from zope.app.security.interfaces import PrincipalLookupError
 from zope.component import getUtility
 from zope.interface import alsoProvides, implements
 
-from paula.properties.interfaces import IPropertyInterface
+from paula.pau_addons.interfaces import IPropertyInterface
 
 
 manage_addPropertiesPluginForm = PageTemplateFile(

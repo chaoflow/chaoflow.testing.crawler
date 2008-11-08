@@ -37,10 +37,10 @@ For further testing we use a fake authenticator plugin:
     >>> from paula.pasplugins.tests.fake_pau_ap import AUTHPLUG_NAME
     >>> from paula.pasplugins.tests.fake_pau_ap import AuthenticatorPlugin
 
-    >>> authplug = AuthenticatorPlugin()
-    >>> provideUtility(authplug, name=AUTHPLUG_NAME)
     >>> len(pau.authenticatorPlugins)
     0
+
+    >>> authplug = getUtility(IAuthenticatorPlugin, name=AUTHPLUG_NAME)
     >>> pau.authenticatorPlugins = (AUTHPLUG_NAME,)
     >>> authplugs = list( pau.getAuthenticatorPlugins() )
     >>> len(authplugs)
@@ -51,7 +51,7 @@ For further testing we use a fake authenticator plugin:
     True
 
 
-Ok, it should be possible to authenticate with the PAU, using the credentials
+Ok, it should be possible to authenticate with PAU, using the credentials
 for the fake user:
 
     >>> pau.authenticate(None)
@@ -67,12 +67,40 @@ for the fake user:
     >>> principal.id is 'fakelogin'
     True
 
+The user carries groups and properties provided by our fake testing
+subscribers:
 
-The user should carry the fake properties and be in the fake groups:
+    >>> principal.a1
+    1
+    >>> principal.a2
+    2
+    >>> principal.b
+    3
+    >>> principal.groups
+    ['fakegroup1', 'fakegroup2']
 
-    >>> interact( locals() )
 
 The user should also be returned for a getPrincipal call:
+
+    >>> principal2 = pau.getPrincipal('fakelogin')
+    >>> principal2.id
+    'fakelogin'
+    >>> principal2.a1
+    1
+    >>> principal2.a2
+    2
+    >>> principal2.b
+    3
+    >>> principal2.groups
+    ['fakegroup1', 'fakegroup2']
+
+
+PAU is working as expected.
+
+
+
+Plone should be able to make use of all this
+--------------------------------------------
 
 
 
