@@ -176,8 +176,8 @@ def recurse(*args):
                     continue
 
                 # don't test tests/ and tests.py, XXX: why not?
-                if x == "tests":
-                    continue
+                #if x == "tests":
+                #    continue
 
                 mod_name = '%s.%s' % (name, x)
                 result += recurse(mod_name)
