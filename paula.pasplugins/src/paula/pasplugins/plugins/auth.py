@@ -36,6 +36,7 @@ from zope.interface import implements, alsoProvides
 from zope.component import getUtility
 from zope.publisher.interfaces import IRequest
 
+from paula.pasplugins.tests.fake_pau_ap import FAKE_LOGIN
 
 manage_addAuthenticationPluginForm = PageTemplateFile(
     '../www/AuthenticationPluginForm',
@@ -150,12 +151,15 @@ class AuthenticationPlugin(BasePlugin):
                       , max_results=None
                       , **kw
                       ):
-        return ({
-                'id': id,
-                'login': id,
-                'pluginid': self.getId(),
-                'editurl': 'some fake url',
-                },)
+        if id == FAKE_LOGIN or login == FAKE_LOGIN:
+            return ({
+                    'id': login or id,
+                    'login': login or id,
+                    'pluginid': self.getId(),
+                    'editurl': 'some fake url',
+                    },)
+        else:
+            return ()
 
     # IUserIntrospection
     #

@@ -16,7 +16,14 @@
     provides="zope.app.authentication.interfaces.ICredentialsPlugin"
     factory=".plugins.paucred.CredentialsFromMappingPlugin"
     name="Paula: PAU CredentialsFromMappingPlugin"
+   />
+  <!-- For testing in a real Plone instance
+  <utility
+    provides="zope.app.authentication.interfaces.IAuthenticatorPlugin"
+    factory=".tests.fake_pau_ap.AuthenticatorPlugin"
+    name="Paula: Fake PAU AuthenticatorPlugin - Do not use!"
     />
+  -->
 
   <include file="profiles.zcml" />
 

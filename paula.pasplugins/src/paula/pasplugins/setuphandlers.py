@@ -13,6 +13,8 @@ from Products.PlonePAS.Extensions.Install import activatePluginInterfaces
 from zope.app.security.interfaces import IAuthentication
 from zope.component import getUtility
 
+# only for testing purposes
+#from paula.pasplugins.tests.fake_pau_ap import AUTHPLUG_NAME
 
 def _setupPlugins(portal, out):
     """
@@ -47,6 +49,8 @@ def _setupPlugins(portal, out):
         pau.credentialsPlugins = tuple(
                 list(pau.credentialsPlugins) + [credplugname]
                 )
+        # only for testing purposes
+        #pau.authenticatorPlugins = (AUTHPLUG_NAME,)
 
 
 def setupPlugins(context):
