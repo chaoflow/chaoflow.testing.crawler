@@ -10,7 +10,7 @@ from Products.PluggableAuthService.interfaces.plugins \
      import IAuthenticationPlugin
 from Products.PlonePAS.Extensions.Install import activatePluginInterfaces
 
-from zope.app.authentication.interfaces import IPluggableAuthentication
+from zope.app.security.interfaces import IAuthentication
 from zope.component import getUtility
 
 
@@ -42,7 +42,7 @@ def _setupPlugins(portal, out):
         activatePluginInterfaces(portal, 'paula_groups', out)
 
     credplugname = 'Paula: PAU CredentialsFromMappingPlugin'
-    pau = getUtility(IPluggableAuthentication)
+    pau = getUtility(IAuthentication)
     if credplugname not in pau.credentialsPlugins:
         pau.credentialsPlugins = tuple(
                 list(pau.credentialsPlugins) + [credplugname]

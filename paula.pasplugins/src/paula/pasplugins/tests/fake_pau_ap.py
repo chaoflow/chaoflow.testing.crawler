@@ -20,6 +20,7 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
+from Globals import Acquisition
 from UserDict import UserDict
 
 # this should be moved from zope.app.authentication to zope.authentication
@@ -38,7 +39,7 @@ alsoProvides(FAKE_REQUEST, IRequest)
 AUTHPLUG_NAME = "Paula: Fake PAU AuthenticatorPlugin - Do not use!"
 
 
-class AuthenticatorPlugin(object):
+class AuthenticatorPlugin(Acquisition.Explicit):
     """Authenticate a fixed fake user
 
         >>> ap = AuthenticatorPlugin()

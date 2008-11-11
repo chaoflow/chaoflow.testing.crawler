@@ -13,7 +13,8 @@
     />
 
   <utility
-    factory="paula.pasplugins.plugins.paucred.CredentialsFromMappingPlugin"
+    provides="zope.app.authentication.interfaces.ICredentialsPlugin"
+    factory=".plugins.paucred.CredentialsFromMappingPlugin"
     name="Paula: PAU CredentialsFromMappingPlugin"
     />
 

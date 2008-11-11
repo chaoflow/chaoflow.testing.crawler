@@ -3,7 +3,7 @@
  <adapters />
  <utilities>
    <utility
-     interface="zope.app.authentication.interfaces.IPluggableAuthentication"
+     interface="zope.app.security.interfaces.IAuthentication"
      factory="zope.app.authentication.authentication.PluggableAuthentication"
      />
  </utilities>

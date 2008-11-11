@@ -20,6 +20,7 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
+from Globals import Acquisition
 from zope.app.authentication.interfaces import ICredentialsPlugin
 from zope.interface import implements, alsoProvides
 from zope.publisher.interfaces import IRequest
@@ -27,7 +28,7 @@ from zope.publisher.interfaces import IRequest
 CREDPLUG_NAME = "Paula: PAU CredentialsFromMappingPlugin"
 
 
-class CredentialsFromMappingPlugin(object):
+class CredentialsFromMappingPlugin(Acquisition.Explicit):
     """Just returns a mapping it is passed
 
     Useful, if you use paula and PAU just for authentication but not for

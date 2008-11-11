@@ -21,11 +21,13 @@ __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
 from zope.app.authentication.interfaces import IPrincipalCreated
-from zope.component import adapter
-from zope.interface import alsoProvides, Interface, Attribute
+from zope.component import adapter, queryUtility
+from zope.interface import Attribute, Interface, alsoProvides
+from zope.security.interfaces import IGroupAwarePrincipal
 
-from paula.pau_addons.interfaces import IPropertyInterface
 from paula.pasplugins.tests.fake_pau_ap import FAKE_LOGIN
+from paula.pau_addons.interfaces import IPropertyInterface
+
 
 class IA(Interface):
     email = Attribute(u'email')
@@ -51,3 +53,15 @@ def setPropertiesForPrincipal(event):
         principal.foo = u'foo value'
         alsoProvides(principal, IA)
         alsoProvides(principal, IB)
+
+
+@adapter(IPrincipalCreated)
+def setGroupsForPrincipal(event):
+    """Put groups onto the principal
+    """
+    principal = event.principal
+    if not IGroupAwarePrincipal.providedBy(principal):
+        return None
+   
+    if principal.id == FAKE_LOGIN:
+        principal.groups.extend(['fakegroup1', 'fakegroup2'])

@@ -28,9 +28,10 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces.plugins \
-    import IAuthenticationPlugin
+    import IAuthenticationPlugin, IUserEnumerationPlugin
+from Products.PlonePAS.interfaces.plugins import IUserIntrospection
 
-from zope.app.authentication.interfaces import IPluggableAuthentication
+from zope.app.security.interfaces import IAuthentication
 from zope.interface import implements, alsoProvides
 from zope.component import getUtility
 from zope.publisher.interfaces import IRequest
@@ -51,7 +52,7 @@ def addAuthenticationPlugin( dispatcher, id, title=None, REQUEST=None ):
         REQUEST['RESPONSE'].redirect(
                                 '%s/manage_workspace'
                                 '?manage_tabs_message='
-                                'paula.plonepas.AuthenticationPlugin+added.'
+                                'paula.pasplugins.AuthenticationPlugin+added.'
                             % dispatcher.absolute_url())
 
 
@@ -60,7 +61,11 @@ class AuthenticationPlugin(BasePlugin):
     """
     security = ClassSecurityInfo()
 
-    implements(IAuthenticationPlugin)
+    implements(
+            IAuthenticationPlugin,
+            IUserEnumerationPlugin,
+            IUserIntrospection,
+            )
 
     meta_type = "Paula PAS Authentication Plugin"
 
@@ -68,6 +73,8 @@ class AuthenticationPlugin(BasePlugin):
         self._id = self.id = id
         self.title = title
 
+    # IAuthenticationPlugin
+    #
     security.declarePrivate('authenticateCredentials')
     def authenticateCredentials(self, credentials):
         """ credentials -> (userid, login)
@@ -90,8 +97,8 @@ class AuthenticationPlugin(BasePlugin):
             ...             and x.has_key('login') \\
             ...             and x.has_key('password') \\
             ...             and p,
-            ...         alsoProvides=(IPluggableAuthentication,))
-            >>> provideUtility(au, IPluggableAuthentication)
+            ...         alsoProvides=(IAuthentication,))
+            >>> provideUtility(au, IAuthentication)
 
         our authentication plugin
 
@@ -116,7 +123,7 @@ class AuthenticationPlugin(BasePlugin):
             >>> ap.authenticateCredentials(creds) is None
             True
         """
-        pau = getUtility(IPluggableAuthentication)
+        pau = getUtility(IAuthentication)
 
         # pau expects something providing request
         # our fake credentials plugin is fine with a mapping
@@ -131,5 +138,48 @@ class AuthenticationPlugin(BasePlugin):
         #    return ('adam', 'adam')
 
         return None
+
+    # IUserEnumerationPlugin
+    #
+    security.declarePrivate( 'enumerateUsers' )
+    def enumerateUsers( self
+                      , id=None
+                      , login=None
+                      , exact_match=False
+                      , sort_by=None
+                      , max_results=None
+                      , **kw
+                      ):
+        return ({
+                'id': id,
+                'login': id,
+                'pluginid': self.getId(),
+                'editurl': 'some fake url',
+                },)
+
+    # IUserIntrospection
+    #
+    security.declarePrivate('getUserIds')
+    def getUserIds(self):
+        return ('fakelogin',)
+
+    # IUserIntrospection
+    #
+    security.declarePrivate('getUserNames')
+    def getUserNames(self):
+        return ('fakelogin',)
+
+    # IUserIntrospection
+    #
+    security.declarePrivate('getUsers')
+    def getUsers(self):
+        """
+        Return a list of users
+
+        XXX DON'T USE THIS, it will kill performance
+        """
+        uf = getToolByName(self, 'acl_users')
+        return tuple([uf.getUserById(x) for x in self.getUserIds()])
+
 
 InitializeClass( AuthenticationPlugin)

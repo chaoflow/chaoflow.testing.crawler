@@ -31,7 +31,7 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces.plugins \
     import IGroupsPlugin
 
-from zope.app.authentication.interfaces import IPluggableAuthentication
+from zope.app.security.interfaces import IAuthentication
 from zope.app.security.interfaces import PrincipalLookupError
 from zope.component import getUtility
 from zope.interface import implements
@@ -43,7 +43,7 @@ manage_addGroupsPluginForm = PageTemplateFile(
 
 
 def addGroupsPlugin( dispatcher, id, title=None, REQUEST=None ):
-    """Add a paula.plonepas GroupsPlugin to a PluggableAuthService.
+    """Add a paula.pasplugins GroupsPlugin to a PluggableAuthService.
     """
     plugin = GroupsPlugin(id, title)
     dispatcher._setObject(plugin.getId(), plugin)
@@ -52,7 +52,7 @@ def addGroupsPlugin( dispatcher, id, title=None, REQUEST=None ):
         REQUEST['RESPONSE'].redirect(
                                 '%s/manage_workspace'
                                 '?manage_tabs_message='
-                                'paula.plonepas.GroupsPlugin+added.'
+                                'paula.pasplugins.GroupsPlugin+added.'
                             % dispatcher.absolute_url())
 
 
@@ -79,7 +79,7 @@ class GroupsPlugin(BasePlugin):
         o May assign groups based on values in the REQUEST object, if present
         """
         # get principal from pau
-        pau = getUtility(IPluggableAuthentication)
+        pau = getUtility(IAuthentication)
         try:
             p = pau.getPrincipal(principal.getId())
         except PrincipalLookupError:

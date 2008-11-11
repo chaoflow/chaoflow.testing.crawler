@@ -10,13 +10,13 @@ PAU is up and running with our real and fake plugins
 First of all, there should be a PAU and it should know about the credentials
 plugin:
 
-    >>> from zope.app.authentication.interfaces import \
-    ...		IPluggableAuthentication
+    >>> from zope.app.security.interfaces import \
+    ...		IAuthentication
     >>> from zope.app.authentication.interfaces import \
     ...		ICredentialsPlugin
     >>> from paula.pasplugins.plugins.paucred import CREDPLUG_NAME
 
-    >>> pau = getUtility(IPluggableAuthentication)
+    >>> pau = getUtility(IAuthentication)
     >>> CREDPLUG_NAME in pau.credentialsPlugins
     True
 
