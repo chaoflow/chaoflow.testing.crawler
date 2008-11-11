@@ -145,6 +145,18 @@ Walk through the PAS API
     >>> pas.getUserById(FAKE_LOGIN)
     <PloneUser 'fakelogin'>
 
+    >>> pas.searchUsers(id=FAKE_LOGIN)[0]['login']
+    'fakelogin'
+    >>> pas.searchUsers(name=FAKE_LOGIN)[0]['login']
+    'fakelogin'
+
+    >>> pas.searchPrincipals(id=FAKE_LOGIN)[0]['login']
+    'fakelogin'
+    >>> pas.searchPrincipals(name=FAKE_LOGIN)[0]['login']
+    'fakelogin'
+
+
+#XXX: This might be useful for a test of pas.validate()
 #    >>> from Products.PluggableAuthService.tests.test_PluggableAuthService \
 #    ...		import RequestCleaner, FauxResponse
 #    >>> rc = RequestCleaner()
@@ -160,14 +172,11 @@ Walk through the PAS API
 #    >>> from Testing.makeRequest import makeRequest
 #    >>> interact( locals() )
 #
-#    >>> pas.searchUsers()
 #    >>> pas.searchGroups()
-#    >>> pas.searchPrincipals()
 
 
-
-Set things up (thx optilux)
----------------------------
+Set things up for TTW login tests (thx optilude)
+------------------------------------------------
 
     >>> from Products.Five.testbrowser import Browser
     >>> browser = Browser()
