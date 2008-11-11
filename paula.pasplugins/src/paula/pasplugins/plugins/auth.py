@@ -29,9 +29,11 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces.plugins \
     import IAuthenticationPlugin, IUserEnumerationPlugin
-from Products.PlonePAS.interfaces.plugins import IUserIntrospection
+#from Products.PlonePAS.interfaces.plugins import IUserIntrospection
 
 from zope.app.security.interfaces import IAuthentication
+from zope.app.security.interfaces import PrincipalLookupError
+
 from zope.interface import implements, alsoProvides
 from zope.component import getUtility
 from zope.publisher.interfaces import IRequest
@@ -65,7 +67,7 @@ class AuthenticationPlugin(BasePlugin):
     implements(
             IAuthenticationPlugin,
             IUserEnumerationPlugin,
-            IUserIntrospection,
+#            IUserIntrospection,
             )
 
     meta_type = "Paula PAS Authentication Plugin"
@@ -151,39 +153,47 @@ class AuthenticationPlugin(BasePlugin):
                       , max_results=None
                       , **kw
                       ):
-        if id == FAKE_LOGIN or login == FAKE_LOGIN:
+        pau = getUtility(IAuthentication)
+
+        #XXX: currently we only know exact match
+        #if exact_match:
+        if exact_match or not exact_match:
+            #XXX: id and login are treated equal - fixme!
+            try:
+                principal = pau.getPrincipal( id or login)
+            except PrincipalLookupError:
+                return ({},)
+
+            #XXX: do something with the data from the returned principal?!
             return ({
                     'id': login or id,
                     'login': login or id,
                     'pluginid': self.getId(),
-                    'editurl': 'some fake url',
                     },)
-        else:
-            return ()
 
     # IUserIntrospection
     #
-    security.declarePrivate('getUserIds')
-    def getUserIds(self):
-        return ('fakelogin',)
+    #security.declarePrivate('getUserIds')
+    #def getUserIds(self):
+    #    return ('fakelogin',)
 
     # IUserIntrospection
     #
-    security.declarePrivate('getUserNames')
-    def getUserNames(self):
-        return ('fakelogin',)
+    #security.declarePrivate('getUserNames')
+    #def getUserNames(self):
+    #    return ('fakelogin',)
 
     # IUserIntrospection
     #
-    security.declarePrivate('getUsers')
-    def getUsers(self):
-        """
-        Return a list of users
-
-        XXX DON'T USE THIS, it will kill performance
-        """
-        uf = getToolByName(self, 'acl_users')
-        return tuple([uf.getUserById(x) for x in self.getUserIds()])
+    #security.declarePrivate('getUsers')
+    #def getUsers(self):
+    #    """
+    #    Return a list of users
+#
+#        XXX DON'T USE THIS, it will kill performance
+#        """
+#        uf = getToolByName(self, 'acl_users')
+#        return tuple([uf.getUserById(x) for x in self.getUserIds()])
 
 
 InitializeClass( AuthenticationPlugin)

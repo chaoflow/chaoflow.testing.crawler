@@ -140,12 +140,10 @@ Walk through the PAS API
     >>> from paula.pasplugins.tests.fake_pau_ap import FAKE_LOGIN
     >>> pas = portal.acl_users
 
-These are currently the same and unsupported
-
-XXX: IUserEnumerationPlugin support needed!
-
     >>> pas.getUser(FAKE_LOGIN)
+    <PloneUser 'fakelogin'>
     >>> pas.getUserById(FAKE_LOGIN)
+    <PloneUser 'fakelogin'>
 
 #    >>> from Products.PluggableAuthService.tests.test_PluggableAuthService \
 #    ...		import RequestCleaner, FauxResponse
@@ -154,19 +152,17 @@ XXX: IUserEnumerationPlugin support needed!
 #    ...		RESPONSE=FauxResponse(),
 #    ...		form=FAKE_CREDS,
 #    ...		)
-
+#
 #    >>> from zope.publisher.browser import TestRequest
 #    >>> request = TestRequest(form=FAKE_CREDS)
 #    >>> pas.validate(request)
-
+#
 #    >>> from Testing.makeRequest import makeRequest
 #    >>> interact( locals() )
 #
 #    >>> pas.searchUsers()
 #    >>> pas.searchGroups()
 #    >>> pas.searchPrincipals()
-
-
 
 
 
@@ -208,30 +204,46 @@ test for in our own views. Having no portlets makes things easier.
     ...     del right_assignable[name]
 
 
-add a "regular" user
+add a "regular" user and check whether authentication works
 
-#    >>> portal.acl_users.source_users.addUser('honk', 'honk', 'honk')
-#    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
-#    >>> browser.getControl(name='__ac_name').value = 'honk'
-#    >>> browser.getControl(name='__ac_password').value = 'honk'
-#    >>> browser.getControl(name='submit').click()
-#
-#    >>> interact( locals() )
+    >>> portal.acl_users.source_users.addUser('myregular', 'myregular', 'myregular')
+    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
+    >>> browser.getControl(name='__ac_name').value = 'myregular'
+    >>> browser.getControl(name='__ac_password').value = 'myregular'
+    >>> browser.getControl(name='submit').click()
+    >>> 'Login failed' in browser.contents
+    False
+    >>> 'myregular' in browser.contents
+    True
+    >>> browser.getLink('Log out').click()
 
-try to authenticate
+    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
+    >>> browser.getControl(name='__ac_name').value = 'myregular'
+    >>> browser.getControl(name='__ac_password').value = 'myregular-wrong'
+    >>> browser.getControl(name='submit').click()
+    >>> 'Login failed' in browser.contents
+    True
+    >>> 'myregular' in browser.contents
+    False
 
-#    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
-#    >>> browser.getControl(name='__ac_name').value = FAKE_LOGIN
-#    >>> browser.getControl(name='__ac_password').value = FAKE_PASSWORD+'foo'
-#    >>> browser.getControl(name='submit').click()
-#    >>> 'Login failed' in browser.contents
-#    True
 
-    >>> interact( locals() )
+try to authenticate with the fake PAU plugin, wrapped by paula.pasplugins
+
+    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
+    >>> browser.getControl(name='__ac_name').value = FAKE_LOGIN
+    >>> browser.getControl(name='__ac_password').value = FAKE_PASSWORD+'foo'
+    >>> browser.getControl(name='submit').click()
+    >>> 'Login failed' in browser.contents
+    True
+    >>> FAKE_LOGIN in browser.contents
+    False
 
     >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
     >>> browser.getControl(name='__ac_name').value = FAKE_LOGIN
     >>> browser.getControl(name='__ac_password').value = FAKE_PASSWORD
     >>> browser.getControl(name='submit').click()
-
-    >>> interact( locals() )
+    >>> 'Login failed' in browser.contents
+    False
+    >>> FAKE_LOGIN in browser.contents
+    True
+    >>> browser.getLink('Log out').click()
