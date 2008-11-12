@@ -13,7 +13,7 @@ from kss.core.tests.base import KSSLayer, KSSViewTestCase
 from paula.testing.testing import my_import
 
 @onsetup
-def setup_package(pkg_name):
+def setup_package(pkg_name, deps=[]):
     """
     The @onsetup decorator causes the execution of this body to be deferred
     until the setup of the Plone site testing layer.
@@ -33,6 +33,8 @@ def setup_package(pkg_name):
     # the ZCML.
     
     ztc.installPackage(pkg_name)
+    for x in deps:
+        ztc.installPackage(x)
     
 class PloneTestCase(ptc.PloneTestCase):
     """Base class used for test cases
