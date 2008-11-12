@@ -25,9 +25,13 @@ from paula.testing.testing import test_globs
 from paula.testing.testing import SuiteGenerator
 from paula.testing.testing import setUp, tearDown
 from paula.testing.testing import my_import
-from paula.testing.plonetesting import setup_package
-from paula.testing.plonetesting import setupPloneSite
-from paula.testing.plonetesting import PloneTestCase
-from paula.testing.plonetesting import FunctionalTestCase
-from paula.testing.plonetesting import PanelTestCase
-from paula.testing.plonetesting import KSSTestCase
+try:
+    from paula.testing.plonetesting import setup_package
+    from paula.testing.plonetesting import setupPloneSite
+    from paula.testing.plonetesting import PloneTestCase
+    from paula.testing.plonetesting import FunctionalTestCase
+    from paula.testing.plonetesting import PanelTestCase
+    from paula.testing.plonetesting import KSSTestCase
+except ImportError:
+    # no plone testing possible
+    pass
