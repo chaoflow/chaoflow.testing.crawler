@@ -163,11 +163,16 @@ class PropertiesPlugin(BasePlugin):
         for schema in list(principal.__provides__):
             if IPropertyInterface.providedBy(schema):
                 for name in list(schema):
-                    properties[name] = getattr(principal, name)
+                    try:
+                        properties[name] = getattr(principal, name)
+                    except AttributeError:
+                        # we should write a log message
+                        pass
 
         if properties.has_key('id'):
             del properties['id']
         
-        return MutablePropertySheet(self.id, **properties)
+        psheet = MutablePropertySheet(self.id, **properties)
+        return psheet
 
 InitializeClass( PropertiesPlugin)
