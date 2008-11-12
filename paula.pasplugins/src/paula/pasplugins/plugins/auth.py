@@ -26,10 +26,13 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from Products.PluggableAuthService.interfaces.plugins \
-    import IAuthenticationPlugin, IUserEnumerationPlugin
 #from Products.PlonePAS.interfaces.plugins import IUserIntrospection
+from Products.PluggableAuthService.interfaces.plugins \
+        import IAuthenticationPlugin
+from Products.PluggableAuthService.interfaces.plugins import IUserAdderPlugin
+from Products.PluggableAuthService.interfaces.plugins \
+        import IUserEnumerationPlugin
+from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 
 from zope.app.security.interfaces import IAuthentication
 from zope.app.security.interfaces import PrincipalLookupError
@@ -67,6 +70,7 @@ class AuthenticationPlugin(BasePlugin):
     implements(
             IAuthenticationPlugin,
             IUserEnumerationPlugin,
+            IUserAdderPlugin,
 #            IUserIntrospection,
             )
 
@@ -141,6 +145,15 @@ class AuthenticationPlugin(BasePlugin):
         #    return ('adam', 'adam')
 
         return None
+
+    # IUserAdderPlugin
+    #
+    security.declarePrivate( 'enumerateUsers' )
+    def doAddUser(self, login, password):
+        # if successful add return True
+
+
+        return False
 
     # IUserEnumerationPlugin
     #
