@@ -108,3 +108,23 @@ class AuthenticatorPlugin(Acquisition.Explicit):
         login = id
         title = description = u"I am a fake user"
         return PrincipalInfo( id, login, title, description)
+
+
+    #XXX: not part of any interface at the moment
+    def addUser(self, login, password):
+        return login == FAKE_LOGIN
+
+    def delPrincipal(self, id):
+        return id == FAKE_LOGIN
+
+    def allowDeletePrincipal(self, id):
+        return id == FAKE_LOGIN
+
+    def allowPasswordSet(self, id):
+        return id == FAKE_LOGIN
+
+    def doChangeUser(self, login, password, **kws):
+        return login == FAKE_LOGIN
+
+    def setPropertiesForUser(self, login, **props):
+        return login == FAKE_LOGIN

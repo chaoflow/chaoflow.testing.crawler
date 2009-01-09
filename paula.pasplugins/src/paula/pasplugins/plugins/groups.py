@@ -55,13 +55,16 @@ def addGroupsPlugin( dispatcher, id, title=None, REQUEST=None ):
                                 'paula.pasplugins.GroupsPlugin+added.'
                             % dispatcher.absolute_url())
 
+paula_groups_ifs = (
+        IGroupsPlugin,
+        )
 
 class GroupsPlugin(BasePlugin):
     """
     """
     security = ClassSecurityInfo()
 
-    implements(IGroupsPlugin)
+    implements(*paula_groups_ifs)
 
     meta_type = "Paula PAS Groups Plugin"
 

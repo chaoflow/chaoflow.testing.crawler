@@ -20,8 +20,12 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
-from zope.interface import alsoProvides
+from zope.app.authentication.authentication import PluggableAuthentication
+from zope.interface import alsoProvides, implements
+
+from paula.pau_addons.interfaces import IPaulaAuthentication
 from paula.pau_addons.interfaces import IPropertyInterface
+
 
 def copy_properties( src, dest):
     """
@@ -92,3 +96,96 @@ def copy_properties( src, dest):
         #     Principals exist at all.
         #prop = property( lambda self: getattr(principal, name))
         #setattr(user, name, prop)
+
+
+class PaulaAuthentication(PluggableAuthentication):
+    """
+    """
+    implements(IPaulaAuthentication)
+
+    def addUser(self, login, password):
+        """
+        """
+        auths = self.getAuthenticatorPlugins()
+        for name, plugin in auths:
+            try:
+                method = plugin.addUser
+            except AttributeError:
+                continue
+
+            if method(login, password):
+                return True
+
+        return False
+
+    def delPrincipal(self, id):
+        auths = self.getAuthenticatorPlugins()
+        for name, plugin in auths:
+            try:
+                method = plugin.delPrincipal
+            except AttributeError:
+                continue
+
+            if method(login):
+                return True
+
+        return False
+
+
+    def allowDeletePrincipal(self, id):
+        auths = self.getAuthenticatorPlugins()
+        for name, plugin in auths:
+            try:
+                method = plugin.allowDeletePrincipal
+            except AttributeError:
+                continue
+
+            if method(id):
+                return True
+
+        return False
+
+    def allowPasswordSet(self, id):
+        """
+        """
+        auths = self.getAuthenticatorPlugins()
+        for name, plugin in auths:
+            try:
+                method = plugin.allowPasswordSet
+            except AttributeError:
+                continue
+
+            if method(id):
+                return True
+
+        return False
+
+    def doChangeUser(self, login, password, **kws):
+        """
+        """
+        auths = self.getAuthenticatorPlugins()
+        for name, plugin in auths:
+            try:
+                method = plugin.doChangeUser
+            except AttributeError:
+                continue
+
+            if method(login, password, **kws):
+                return True
+
+        return False
+
+    def setPropertiesForUser(self, login, **props):
+        #XXX: this is bad and should not go via the auth plugin!!
+        # it's also very specific to citymob
+        auths = self.getAuthenticatorPlugins()
+        for name, plugin in auths:
+            try:
+                method = plugin.setPropertiesForUser
+            except AttributeError:
+                continue
+
+            if method(login, **props):
+                return True
+
+        raise RuntimeError

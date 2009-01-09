@@ -20,19 +20,13 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
-from zope.app.authentication.interfaces import IPluggableAuthentication
-from zope.app.security.interfaces import IAuthentication
+from Globals import Persistent
+from Products.PlonePAS.sheet import MutablePropertySheet
 
-from zope.interface.interfaces import IInterface
-from zope.schema import TextLine
-
-class IPropertyInterface(IInterface):
-    """Interfaces providing this are interfaces defining properties.
-    """
-
-class IPaulaAuthentication(IAuthentication, IPluggableAuthentication):
+class DataManager(object):
     """
     """
-    def addUser(login, password):
-        """Add a user to the first authenticator plugin that supports it
-        """
+
+class PersistentSheet(Persistent, MutablePropertySheet):
+    """
+    """

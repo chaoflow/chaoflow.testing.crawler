@@ -101,13 +101,28 @@ PAU is working as expected.
 The PAS plugins
 ---------------
 
+    >>> pas = portal.acl_users
+
     >>> from paula.pasplugins.tests.fake_pau_ap import FAKE_CREDS
     >>> from paula.pasplugins.tests.fake_pau_ap import FAKE_LOGIN
     >>> from paula.pasplugins.tests.fake_pau_ap import FAKE_PASSWORD
 
+Make sure our PAS plugins are always first
+
+    >>> from paula.pasplugins.plugins.auth import paula_auth_ifs as aifs
+    >>> from paula.pasplugins.plugins.groups import paula_groups_ifs as gifs
+    >>> from paula.pasplugins.plugins.properties \
+    ...         import paula_properties_ifs as pifs
+    >>> [pas.plugins.listPlugins(x)[0][0] == 'paula_auth' for x in aifs]
+    [True, True, True, True, True]
+    >>> [pas.plugins.listPlugins(x)[0][0] == 'paula_groups' for x in gifs]
+    [True]
+    >>> [pas.plugins.listPlugins(x)[0][0] == 'paula_properties' for x in pifs]
+    [True]
+
 Paula PAS auth plugin
 
-    >>> p = portal.acl_users.paula_auth.authenticateCredentials(FAKE_CREDS)
+    >>> p = pas.paula_auth.authenticateCredentials(FAKE_CREDS)
     >>> p
     ('fakelogin', 'fakelogin')
 
@@ -127,6 +142,10 @@ Paula PAS properties plugin - the order might be unstable
     ('email', u'foo@bar.com')
     >>> psheet.propertyItems()[2]
     ('realname', u'fake user')
+
+Let's try to write properties
+
+    >>> psheet.setProperty('fakelogin', 'foo', 'new value')
     
 Paula PAS group plugin
 
@@ -145,16 +164,41 @@ Walk through the PAS API
     >>> pas.getUserById(FAKE_LOGIN)
     <PloneUser 'fakelogin'>
 
-    >>> pas.searchUsers(id=FAKE_LOGIN)[0]['login']
+    >>> pas.searchUsers(id=FAKE_LOGIN,exact_match=True)[0]['login']
     'fakelogin'
-    >>> pas.searchUsers(name=FAKE_LOGIN)[0]['login']
-    'fakelogin'
-
-    >>> pas.searchPrincipals(id=FAKE_LOGIN)[0]['login']
-    'fakelogin'
-    >>> pas.searchPrincipals(name=FAKE_LOGIN)[0]['login']
+    >>> pas.searchUsers(name=FAKE_LOGIN,exact_match=True)[0]['login']
     'fakelogin'
 
+    >>> pas.searchPrincipals(id=FAKE_LOGIN,exact_match=True)[0]['login']
+    'fakelogin'
+    >>> pas.searchPrincipals(name=FAKE_LOGIN,exact_match=True)[0]['login']
+    'fakelogin'
+
+Adding a user and changing the password: fakelogin should be "handled" by fake
+authenticator, everything else should make it into source_users
+
+    >>> pas._doAddUser('fakelogin', 'foo', [], [])
+    >>> list(pas.source_users.listUserIds())
+    ['test_user_1_']
+
+    >>> pas.userSetPassword('fakelogin', 'foo')
+    >>> pas.userSetPassword('somebody', 'foo')
+    Traceback (most recent call last):
+    ...
+    RuntimeError: No user management plugins were able to successfully ...
+
+    >>> pas._doAddUser('somebody', 'foo', [], [])
+    >>> list(pas.source_users.listUserIds())
+    ['somebody', 'test_user_1_']
+
+    >>> pas.userSetPassword('fakelogin', 'foo')
+    >>> pas.userSetPassword('somebody', 'foo')
+
+    >>> pas._doDelUser('somebody')
+    >>> list(pas.source_users.listUserIds())
+    ['test_user_1_']
+
+    >>> pas._doDelUser('fakelogin')
 
 #XXX: This might be useful for a test of pas.validate()
 #    >>> from Products.PluggableAuthService.tests.test_PluggableAuthService \

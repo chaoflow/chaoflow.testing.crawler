@@ -2,9 +2,15 @@
 <componentregistry>
  <adapters />
  <utilities>
+   <!--
    <utility
      interface="zope.app.security.interfaces.IAuthentication"
      factory="zope.app.authentication.authentication.PluggableAuthentication"
+     />
+   -->
+   <utility
+     interface="paula.pau_addons.interfaces.IPaulaAuthentication"
+     factory="paula.pau_addons.utils.PaulaAuthentication"
      />
  </utilities>
 </componentregistry>

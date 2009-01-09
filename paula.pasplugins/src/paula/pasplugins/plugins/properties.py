@@ -25,7 +25,9 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+
 from Products.PlonePAS.sheet import MutablePropertySheet
+from Products.PlonePAS.interfaces.plugins import IMutablePropertiesPlugin
 
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.interfaces.plugins \
@@ -33,6 +35,7 @@ from Products.PluggableAuthService.interfaces.plugins \
 
 from zope.app.security.interfaces import IAuthentication
 from zope.app.security.interfaces import PrincipalLookupError
+
 from zope.component import getUtility
 from zope.interface import alsoProvides, implements
 
@@ -57,13 +60,19 @@ def addPropertiesPlugin( dispatcher, id, title=None, REQUEST=None ):
                                 'paula.plonepas.PropertiesPlugin+added.'
                             % dispatcher.absolute_url())
 
+paula_properties_ifs = (
+        IPropertiesPlugin,
+        )
 
 class PropertiesPlugin(BasePlugin):
     """
     """
     security = ClassSecurityInfo()
 
-    implements(IPropertiesPlugin)
+    implements(
+            IMutablePropertiesPlugin,
+            *paula_properties_ifs
+            )
 
     meta_type = "Paula PAS Properties Plugin"
 
@@ -150,6 +159,8 @@ class PropertiesPlugin(BasePlugin):
         # get principal from pau
         pau = getUtility(IAuthentication)
         try:
+            #XXX: cache at least per request!
+            #XXX: is called already in auth plugin
             principal = pau.getPrincipal(user.getId())
         except PrincipalLookupError:
             return {}
@@ -174,5 +185,16 @@ class PropertiesPlugin(BasePlugin):
         
         psheet = MutablePropertySheet(self.id, **properties)
         return psheet
+
+    def setPropertiesForUser(self, user, psheet):
+        """
+        Set modified properties on the user persistently.
+
+        Raise a ValueError if the property or property value is invalid
+        """
+        #XXX: This is a hack - properties should not be handled by auth
+        pau = getUtility(IAuthentication)
+        props = dict(psheet.propertyItems())
+        return pau.setPropertiesForUser(user, **props)
 
 InitializeClass( PropertiesPlugin)

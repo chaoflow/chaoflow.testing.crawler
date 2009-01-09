@@ -22,16 +22,20 @@ __docformat__ = "plaintext"
 
 import UserDict
 
-from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-#from Products.PlonePAS.interfaces.plugins import IUserIntrospection
+from Products.PlonePAS.interfaces.capabilities import IDeleteCapability
+from Products.PlonePAS.interfaces.capabilities import IPasswordSetCapability
+from Products.PlonePAS.interfaces.plugins import IUserIntrospection
+from Products.PlonePAS.interfaces.plugins import IUserManagement
+
 from Products.PluggableAuthService.interfaces.plugins \
         import IAuthenticationPlugin
 from Products.PluggableAuthService.interfaces.plugins import IUserAdderPlugin
 from Products.PluggableAuthService.interfaces.plugins \
         import IUserEnumerationPlugin
+
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 
 from zope.app.security.interfaces import IAuthentication
@@ -62,16 +66,21 @@ def addAuthenticationPlugin( dispatcher, id, title=None, REQUEST=None ):
                             % dispatcher.absolute_url())
 
 
+paula_auth_ifs = (
+            IAuthenticationPlugin,
+            IUserAdderPlugin,
+            IUserEnumerationPlugin,
+            IUserManagement,
+#            IUserIntrospection,
+            )
+
 class AuthenticationPlugin(BasePlugin):
     """
     """
-    security = ClassSecurityInfo()
-
     implements(
-            IAuthenticationPlugin,
-            IUserEnumerationPlugin,
-            IUserAdderPlugin,
-#            IUserIntrospection,
+            IDeleteCapability,
+            IPasswordSetCapability,
+            *paula_auth_ifs
             )
 
     meta_type = "Paula PAS Authentication Plugin"
@@ -82,7 +91,6 @@ class AuthenticationPlugin(BasePlugin):
 
     # IAuthenticationPlugin
     #
-    security.declarePrivate('authenticateCredentials')
     def authenticateCredentials(self, credentials):
         """ credentials -> (userid, login)
 
@@ -148,16 +156,62 @@ class AuthenticationPlugin(BasePlugin):
 
     # IUserAdderPlugin
     #
-    security.declarePrivate( 'enumerateUsers' )
     def doAddUser(self, login, password):
-        # if successful add return True
+        """ Add a user record to a User Manager, with the given login
+            and password
 
+        o Return a Boolean indicating whether a user was added or not
+        """
+        pau = getUtility(IAuthentication)
+        if pau.addUser(login, password):
+            return True
 
         return False
 
+
+    # IDeleteCapability
+    #
+    def allowDeletePrincipal(self, id):
+        """True iff this plugin can delete a certain user/group.
+        """
+        #XXX: We need to check with PAU whether we can delete the principal
+        pau = getUtility(IAuthentication)
+        return pau.allowDeletePrincipal(id)
+        
+    # IPasswordSetCapability
+    #
+    def allowPasswordSet(self, id):
+        """True iff this plugin can set the password of a certain user.
+        """
+        pau = getUtility(IAuthentication)
+        return pau.allowPasswordSet(id)
+
+    # IUserManagamenet
+    #
+    def doChangeUser(self, login, password, **kws):
+        """
+        Change a user's password (differs from role) roles are set in
+        the pas engine api for the same but are set via a role
+        manager)
+        """
+        pau = getUtility(IAuthentication)
+        if not pau.doChangeUser(login, password, **kws):
+            # maybe should be moved to the PAU auth plugins
+            raise RuntimeError
+
+    def doDeleteUser(self, login):
+        """
+        Remove a user record from a User Manager, with the given login
+        and password
+
+        o Return a Boolean indicating whether a user was removed or
+          not
+        """
+        pau = getUtility(IAuthentication)
+        return pau.delPrincipal(login)
+
     # IUserEnumerationPlugin
     #
-    security.declarePrivate( 'enumerateUsers' )
     def enumerateUsers( self
                       , id=None
                       , login=None
@@ -168,14 +222,12 @@ class AuthenticationPlugin(BasePlugin):
                       ):
         pau = getUtility(IAuthentication)
 
-        #XXX: currently we only know exact match
-        #if exact_match:
-        if exact_match or not exact_match:
+        if exact_match:
             #XXX: id and login are treated equal - fixme!
             try:
                 principal = pau.getPrincipal( id or login)
             except PrincipalLookupError:
-                return ({},)
+                return ()
 
             #XXX: do something with the data from the returned principal?!
             return ({
@@ -184,24 +236,24 @@ class AuthenticationPlugin(BasePlugin):
                     'pluginid': self.getId(),
                     },)
 
-    # IUserIntrospection
-    #
-    #security.declarePrivate('getUserIds')
-    #def getUserIds(self):
-    #    return ('fakelogin',)
+        # XXX: no exact_match, we need to search for the user in PAU
 
-    # IUserIntrospection
-    #
-    #security.declarePrivate('getUserNames')
-    #def getUserNames(self):
-    #    return ('fakelogin',)
-
-    # IUserIntrospection
-    #
-    #security.declarePrivate('getUsers')
-    #def getUsers(self):
-    #    """
-    #    Return a list of users
+#    # IUserIntrospection
+#    #
+#    def getUserIds(self):
+#        # called eg when going into the memberdata tool contents
+#        return ('fakelogin',)
+#
+#    # IUserIntrospection
+#    #
+#    def getUserNames(self):
+#        return ('fakelogin',)
+#
+#    # IUserIntrospection
+#    #
+#    def getUsers(self):
+#        """
+#        Return a list of users
 #
 #        XXX DON'T USE THIS, it will kill performance
 #        """
