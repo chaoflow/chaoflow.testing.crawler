@@ -22,6 +22,7 @@ __docformat__ = "plaintext"
 
 import os
 import os.path
+import types
 import unittest
 
 from zope.app.testing.functional import ZCMLLayer, FunctionalDocFileSuite
@@ -50,8 +51,9 @@ class Mock(object):
 
         >>> class IA(Interface):
         ...     pass
-
         >>> class IB(Interface):
+        ...     pass
+        >>> class IC(Interface):
         ...     pass
 
         >>> m = Mock( a = 1, f = lambda : 2, alsoProvides=(IA,IB))
@@ -61,13 +63,26 @@ class Mock(object):
         2
         >>> IA.providedBy(m)
         True
+        >>> IB.providedBy(m)
+        True
+        >>> m = Mock( a = 1, f = lambda : 2, alsoProvides=IC)
+        >>> IC.providedBy(m)
+        True
     """
     implements(Interface)
-    def __init__(self, **kwargs):
-        if kwargs.has_key('alsoProvides'):
-            alsoProvides(self, *kwargs['alsoProvides'])
-            del kwargs['alsoProvides']
-        for k,v in kwargs.items():
+    def __init__(self, **kws):
+        try:
+            alsoProvides = kws['alsoProvides']
+        except KeyError:
+            pass
+        else:
+            if type alsoProvides is types.TupleType:
+                alsoProvides(self, *alsoProvides)
+            else:
+                alsoProvides(self, alsoProvides)
+            del kws['alsoProvides']
+
+        for k,v in kws.items():
             setattr(self, k, v)
 
 test_globs = dict(
