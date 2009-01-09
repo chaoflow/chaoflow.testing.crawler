@@ -31,77 +31,14 @@ from zope.component import testing
 from zope.testing import doctest
 from zope.testing import doctestunit
 
-# --- stuff for globs -------------------------------------------------
+from paula.testing.utils import saneimport, hasdoctests
+from paula.testing.globs import test_globs
 
-from UserDict import UserDict
-from UserList import UserList
+optionflags = \
+        doctest.REPORT_ONLY_FIRST_FAILURE + \
+        doctest.ELLIPSIS + \
+        doctest.NORMALIZE_WHITESPACE
 
-from zope.component import provideAdapter, provideUtility
-from zope.component import adapts
-from zope.component import getUtility, queryUtility
-from zope.component import getSiteManager
-
-from zope.interface import alsoProvides, implements, providedBy
-from zope.interface import Interface, Attribute
-
-from paula.testing import interact
-
-class Mock(object):
-    """a mock object that carries desired interfaces
-
-        >>> class IA(Interface):
-        ...     pass
-        >>> class IB(Interface):
-        ...     pass
-        >>> class IC(Interface):
-        ...     pass
-
-        >>> m = Mock( a = 1, f = lambda : 2, alsoProvides=(IA,IB))
-        >>> m.a
-        1
-        >>> m.f()
-        2
-        >>> IA.providedBy(m)
-        True
-        >>> IB.providedBy(m)
-        True
-        >>> m = Mock( a = 1, f = lambda : 2, alsoProvides=IC)
-        >>> IC.providedBy(m)
-        True
-    """
-    implements(Interface)
-    def __init__(self, **kws):
-        try:
-            alsoProvides = kws['alsoProvides']
-        except KeyError:
-            pass
-        else:
-            if type alsoProvides is types.TupleType:
-                alsoProvides(self, *alsoProvides)
-            else:
-                alsoProvides(self, alsoProvides)
-            del kws['alsoProvides']
-
-        for k,v in kws.items():
-            setattr(self, k, v)
-
-test_globs = dict(
-        Attribute = Attribute,
-        Interface = Interface,
-        Mock = Mock,
-        UserDict = UserDict,
-        UserList = UserList,
-        adapts = adapts,
-        alsoProvides = alsoProvides,
-        getUtility = getUtility,
-        getSiteManager = getSiteManager,
-        interact = interact.interact,
-        implements = implements,
-        provideAdapter = provideAdapter,
-        provideUtility = provideUtility,
-        providedBy = providedBy,
-        queryUtility = queryUtility,
-        )
 
 def setUp(test):
     """We can use this to set up anything that needs to be available for
@@ -110,26 +47,8 @@ def setUp(test):
     
     Look at the Python unittest and doctest module documentation to learn 
     more about how to prepare state and pass it into various tests.
-
-        >>> m = Mock()
-        >>> class IA(Interface):
-        ...     pass
-
-        >>> alsoProvides(m, IA)
-        >>> providedBy(m) is not None
-        True
-
-        >>> provideUtility(m, IA)
-
-        >>> class A(object):
-        ...     adapts(Interface)
-        ...     implements(IA)
-
-        >>> provideAdapter(A)
     """
     testing.setUp(test)
-    for k,v in test_globs.items():
-        test.globs[k] = v
 
 
 def tearDown(test):
@@ -137,66 +56,104 @@ def tearDown(test):
     """
     testing.tearDown(test)
 
-
-def my_import(name):
-    mod = __import__(name)
-    components = name.split('.')
-    for x in components[1:]:
-         mod = getattr(mod, x)
-    return mod
-
+# ------------------------------------------------------------------------
 
 def recurse(*args):
-    """returns all modules, that contain doctests
-
+    """
     returns all doctests found within the modules passed in *args
 
-    For paula.testing itself, recurse should find 8 modules containing tests:
+    That is:
+        - modules containing doctests
+        - text files named after modules, containing doctests
+
+    For paula.testing itself, recurse should find 9 modules containing tests:
 
         >>> to_test = recurse('paula.testing')
         >>> len(to_test)
         9
     """
     result = []
-    for name in args:
-        mod = my_import(name)
-        result += [mod]
-        modname = mod.__file__.replace('.pyc','').replace('.py','')
-        if modname.endswith('__init__'):
-            # a subpackage
-            dirname = os.path.dirname(mod.__file__)
-            dirlist = os.listdir(dirname)
-            # iterate over content of current directory
-            for x in dirlist:
-                fullpath = os.path.join(dirname, x)
-                # if neither directory nor .py file, skip it
-                if not (os.path.isdir(fullpath) or x.endswith('.py')):
-                    continue
+    for modname in args:
+        # import module and append to result, iff it contains doctests
+        mod = saneimport(modname)
+        if hasdoctests(mod):
+            result.append(mod)
 
-                # skip directories, that are not packages
-                if os.path.isdir(fullpath) and not \
-                   os.path.isfile(os.path.join(fullpath, '__init__.py')): 
-                    continue
-            
-                # get rid of .py ending
-                x = x.replace('.py','')
+        # Check module vs package
+        realmodname = mod.__file__.replace('.pyc','').replace('.py','')
+        if not realmodname.endswith('__init__'):
+            # a module, not a package, we can stop recursing here
+            continue
 
-                # skip if it starts with a dot
-                if x.startswith('.'):
-                    continue
+        # list package contents and evtl. recurse further
+        dirname = os.path.dirname(mod.__file__)
+        dirlist = os.listdir(dirname)
+        for item in dirlist:
+            fullpath = os.path.join(dirname, item)
+            # skip, if neither directory nor .py file nor txt file
+            if not os.path.isdir(fullpath):
+                if not item.endswith('.py')):
+                continue
 
-                # skip __init__.py, it _is_ the current package, which was
-                # added above: result += [mod]
-                if x == "__init__":
-                    continue
+            # skip directories, that are not packages
+            if os.path.isdir(fullpath) and not \
+               os.path.isfile(os.path.join(fullpath, '__init__.py')): 
+                continue
+        
+            # get rid of .py ending
+            x = x.replace('.py','')
 
-                # don't test tests/ and tests.py, XXX: why not?
-                #if x == "tests":
-                #    continue
+            # skip if it starts with a dot
+            if x.startswith('.'):
+                continue
 
-                mod_name = '%s.%s' % (name, x)
-                result += recurse(mod_name)
+            # skip __init__.py, it _is_ the current package, which was
+            # added above: result += [mod]
+            if x == "__init__":
+                continue
+
+            # don't test tests/ and tests.py, XXX: why not?
+            #if x == "tests":
+            #    continue
+
+            mod_name = '%s.%s' % (name, x)
+            result += recurse(mod_name)
     return result
+
+
+def doctestsuite(mod):
+    return doctestunit.DocTestSuite(mod,
+            setUp=setUp, tearDown=tearDown,
+            optionflags=optionflags
+            )
+
+def testsuite(*args):
+    """
+    """
+    testsuites = []
+    for pkgname in args:
+        mod = saneimport(pkgname)
+        if hasdoctests(mod):
+            testsuites.append(doctestsuite(mod))
+
+        # Only recurse for packages, for modules continue with next loop
+        if not '__init__' in mod.__file__:
+            continue
+
+
+    XXX
+
+        if txtfile:
+            if not hasdoctests(txtfile):
+                return []
+
+            testsuite = doctestunit.DocFileSuite( txtfile
+                    package=pkgname,
+                    setUp=setUp, tearDown=tearDown,
+                    optionflags=optionflags
+                    )
+            return testsuite
+
 
 
 # XXX: this could be moved inside the SuiteGenerator
@@ -206,23 +163,34 @@ def get_test_suite(pkg_name, tests=[]):
     recurses through a package and returns a test suite consisting of all
     doctest found + the tests passed as argument
     """
-    def test_suite():
-        to_test = recurse(pkg_name,)
-        optionflags = \
-                doctest.REPORT_ONLY_FIRST_FAILURE + \
-                doctest.ELLIPSIS + \
-                doctest.NORMALIZE_WHITESPACE
-        unit_tests = []
-        for x in to_test:
-            unit_test = doctestunit.DocTestSuite(x,
+    def testsuite(x):
+        if type(x) == types.ModuleType:
+            return doctestunit.DocTestSuite(x,
                     setUp=setUp, tearDown=tearDown,
                     optionflags=optionflags
                     )
-            unit_tests.append(unit_test)
+
+        if type(x) == types.StringTypes:
+            return doctestunit.DocFileSuite( XXX
+                    package=XXX,
+                    setUp=setUp, tearDown=tearDown,
+                    optionflags=optionflags
+                    )
+    def fulltestsuite():
+        to_test = recurse(pkg_name,)
+        testsuites = [testsuite(x) for x in to_test]
+        for x in to_test:
+            test = doctestunit.DocFileSuite( XXX
+                    package=XXX,
+                    setUp=setUp, tearDown=tearDown,
+                    optionflags=optionflags
+                    )
+            unit_tests.append(test)
+
         test_suite = unittest.TestSuite(unit_tests + tests)
         return test_suite
 
-    return test_suite
+    return fulltestsuite
 
 
 # TestSuite/Cases loading ftesting.zcml
