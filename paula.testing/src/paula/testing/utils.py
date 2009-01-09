@@ -20,18 +20,77 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
+import os
+from paula.testing.interact import interact
+
+def hasdoctests(file):
+    """Check whether a file has doctests
+    """
+    for line in open(file):
+        if line.lstrip().startswith('>>>'):
+            return True
+
+
+def ispackagedir(path):
+    initfile = os.path.join(path, '__init__.py')
+    result = os.path.isfile(initfile)
+    return result
+
+
+def pkgpath(pkg):
+    """Returns the path to a imported package
+
+        >>> from paula.testing.utils import saneimport
+        >>> from paula.testing.utils import pkgpath
+        >>> pkg = saneimport('paula.testing')
+        >>> pkgpath(pkg).split(os.sep)[-2:]
+        ['paula', 'testing']
+    """
+    path = pkg.__file__.replace('.pyc','').replace('.py','')
+    if not path.endswith('__init__'):
+        raise ValueError
+    path = path.replace(os.sep+'__init__', '')
+    if path.endswith(os.sep):
+        raise ValueError
+    return path
+
+
+def recursedir(path, cond=lambda x: True, filefilter=lambda x: True):
+    """Recurses a directory structure and returns all contained files
+
+    Optionally a condition can be given that must be met in order to recurse
+    into a directory. The condition is a function that takes the directory as
+    argument and returns either True or False.
+
+        >>> from paula.testing.utils import saneimport
+        >>> from paula.testing.utils import recursedir
+        >>> from paula.testing.utils import pkgpath
+        >>> from paula.testing.utils import ispackagedir
+        >>> pkg = saneimport('paula.testing')
+        >>> l1 = recursedir(pkgpath(pkg))
+        >>> l1 = filter(lambda x: not x.endswith('.swp'), l1)
+        >>> len(l1)
+        35
+        >>> l2 = recursedir(pkgpath(pkg), cond=ispackagedir)
+        >>> l2 = filter(lambda x: not x.endswith('.swp'), l2)
+        >>> len(l2)
+        33
+    """
+    files=[]
+    ls = os.listdir(path)
+    for item in ls:
+        fullpath = os.path.join(path, item)
+        if os.path.isdir(fullpath) and cond(fullpath):
+            files += recursedir(fullpath,cond,filefilter)
+            continue
+        if filefilter(fullpath):
+            files.append(fullpath)
+    return files
+
+
 def saneimport(name):
     mod = __import__(name)
     components = name.split('.')
     for x in components[1:]:
          mod = getattr(mod, x)
     return mod
-
-def hasdoctests(mod):
-    """Check whether a module has doctests
-    """
-    pyfile = mod.__file__.replace('.pyc','.py')
-    for line in open(pyfile):
-        if line.lstrip().startswith('>>>'):
-            return True
-

@@ -22,7 +22,7 @@ __docformat__ = "plaintext"
 
 import types
 
-from zope.interface import alsoProvides
+from zope.interface import alsoProvides, implements, Interface
 
 class Mock(object):
     """a mock object that carries desired interfaces
@@ -48,16 +48,17 @@ class Mock(object):
         True
     """
     implements(Interface)
+
     def __init__(self, **kws):
         try:
-            alsoProvides = kws['alsoProvides']
+            alsoprovides = kws['alsoProvides']
         except KeyError:
             pass
         else:
-            if type alsoProvides is types.TupleType:
-                alsoProvides(self, *alsoProvides)
+            if type(alsoprovides) is types.TupleType:
+                alsoProvides(self, *alsoprovides)
             else:
-                alsoProvides(self, alsoProvides)
+                alsoProvides(self, alsoprovides)
             del kws['alsoProvides']
 
         for k,v in kws.items():
