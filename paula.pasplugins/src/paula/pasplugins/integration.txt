@@ -114,7 +114,7 @@ Make sure our PAS plugins are always first
     >>> from paula.pasplugins.plugins.properties \
     ...         import paula_properties_ifs as pifs
     >>> [pas.plugins.listPlugins(x)[0][0] == 'paula_auth' for x in aifs]
-    [True, True, True, True, True]
+    [True, True, True, True]
     >>> [pas.plugins.listPlugins(x)[0][0] == 'paula_groups' for x in gifs]
     [True]
     >>> [pas.plugins.listPlugins(x)[0][0] == 'paula_properties' for x in pifs]
