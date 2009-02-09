@@ -89,7 +89,14 @@ def recursedir(path, cond=lambda x: True, filefilter=lambda x: True):
 
 
 def saneimport(name):
-    mod = __import__(name)
+    try:
+        mod = __import__(name, globals())
+    except ImportError,e:
+        # Somehow the traceback of ImportErrors gets screwed
+        # quickfix, we just print it here
+        import traceback
+        traceback.print_exc()
+        raise e
     components = name.split('.')
     for x in components[1:]:
          mod = getattr(mod, x)
