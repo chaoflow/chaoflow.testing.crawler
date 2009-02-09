@@ -1,4 +1,4 @@
-# Copyright (c) 2008 by Florian Friesdorf
+# Copyright (c) 2008-2009 by Florian Friesdorf
 #
 # GNU Affero General Public License (AGPL)
 #
@@ -15,11 +15,8 @@
 # You should have received a copy of the GNU Affero General Public
 # License along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
-"""
-"""
+
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
 from paula.testing.testing import get_test_suite
-from paula.testing.testing import test_globs
-from paula.testing.testing import setUp, tearDown
