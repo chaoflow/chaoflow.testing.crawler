@@ -1,2 +1,0 @@
-paula.grouputil Package Readme
-==============================

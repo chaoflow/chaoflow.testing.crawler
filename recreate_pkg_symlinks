@@ -1,6 +1,0 @@
-#!/bin/sh
-
-rm -f _paula.*
-for i in paula.*; do
-    ln $i/src/paula/$(echo $i | cut -d. -f2) _$i -s
-done

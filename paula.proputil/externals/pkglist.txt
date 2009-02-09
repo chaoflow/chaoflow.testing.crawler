@@ -1,2 +1,0 @@
-paula.properties
-paula.testing

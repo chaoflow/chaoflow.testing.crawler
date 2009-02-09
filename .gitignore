@@ -1,2 +1,13 @@
-# I am using links like this to directly access the package's source
-_paula.*
+*.pyc
+.*.swp
+.*.swo
+.swp
+.swo
+*.egg-info
+/.installed.cfg
+/bin
+/build
+/develop-eggs
+/dist
+/parts
+setup.py.old

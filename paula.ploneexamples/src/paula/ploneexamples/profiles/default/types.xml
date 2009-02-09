@@ -1,6 +1,0 @@
-<object name="portal_types" meta_type="Plone Types Tool">
- <object name="Paula Minimal Plone User"
-    meta_type="Factory-based Type Information"/>
- <object name="Paula Basic Group"
-    meta_type="Factory-based Type Information"/>
-</object>

@@ -1,8 +1,0 @@
-<configure 
-    xmlns="http://namespaces.zope.org/zope"
-    >
-
-  <include file="minplone.zcml" />
-  <include file="basicgroup.zcml" />
-    
-</configure>

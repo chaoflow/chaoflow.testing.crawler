@@ -1,7 +1,0 @@
-<configure
-    xmlns="http://namespaces.zope.org/zope"
-    >
-
-  <include package="paula.examples" file="adapters.zcml" />
-
-</configure>
