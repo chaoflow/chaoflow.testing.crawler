@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.81'
+version = '0.82'
 
 setup(name='paula.testing',
       version=version,
