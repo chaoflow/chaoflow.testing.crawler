@@ -70,18 +70,20 @@ def recursedir(path, cond=lambda x: True, filefilter=lambda x: True):
         >>> l1 = recursedir(pkgpath(pkg))
         >>> l1 = filter(lambda x: not x.endswith('.swp'), l1)
         >>> len(l1)
-        35
+        38
+
         >>> l2 = recursedir(pkgpath(pkg), cond=ispackagedir)
         >>> l2 = filter(lambda x: not x.endswith('.swp'), l2)
         >>> len(l2)
-        33
+        34
     """
     files=[]
     ls = os.listdir(path)
     for item in ls:
         fullpath = os.path.join(path, item)
-        if os.path.isdir(fullpath) and cond(fullpath):
-            files += recursedir(fullpath,cond,filefilter)
+        if os.path.isdir(fullpath):
+            if cond(fullpath):
+                files += recursedir(fullpath,cond,filefilter)
             continue
         if filefilter(fullpath):
             files.append(fullpath)

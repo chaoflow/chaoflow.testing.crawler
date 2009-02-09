@@ -1,0 +1,5 @@
+def fail():
+    """
+        >>> True
+        False
+    """

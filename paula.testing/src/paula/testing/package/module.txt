@@ -1,0 +1,7 @@
+Currently we need to import manually.
+Currently I think it would be nice if everything from the corresponding py
+file is imported automatically
+
+    >>> from paula.testing.package.module import *
+    >>> testfunc()
+    True

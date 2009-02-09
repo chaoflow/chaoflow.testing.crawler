@@ -20,8 +20,9 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
-def test():
+def testfunc():
     """
         >>> 3 + 3
         6
     """
+    return True
