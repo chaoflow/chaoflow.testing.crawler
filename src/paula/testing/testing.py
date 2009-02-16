@@ -54,6 +54,13 @@ def setUp(test):
     testing.setUp(test)
     for k,v in test_globs.items():
         test.globs[k] = v
+    test.globs['testinstance'] = test
+
+    def testfile(path):
+        if not path.startswith(os.sep):
+            path = os.sep.join(test.filename.split(os.sep)[:-1]+ [path,])
+        return file(path)
+    test.globs['testfile'] = testfile
 
 def tearDown(test):
     """
