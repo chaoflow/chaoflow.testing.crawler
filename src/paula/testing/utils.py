@@ -91,7 +91,7 @@ def recursedir(path, cond=lambda x: True, filefilter=lambda x: True):
 def saneimport(name):
     try:
         mod = __import__(name, globals())
-    except ImportError,e:
+    except Exception, e:
         # Somehow the traceback of ImportErrors gets screwed
         # quickfix, we just print it here
         import traceback

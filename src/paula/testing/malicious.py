@@ -1,4 +1,4 @@
-raise ImportError, "I cannot be imported"
+raise Exception, "I cannot be imported"
 
 def func():
     """
