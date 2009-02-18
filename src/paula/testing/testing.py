@@ -84,7 +84,13 @@ def scanfordoctest(file):
     if file.endswith('.txt'):
         pyfile = file.replace('.txt','.py')
         if os.path.isfile(pyfile):
-            return hasdoctests(file)
+            if hasdoctests(file):
+                # skip txt files that contain 'DISABLE_DOCTEST'
+                # this is for testing/evaluation, untested and might change
+                for line in open(file):
+                    if line.lstrip().startswith('DISABLE_DOCTEST'):
+                        return False
+                return True
 
     return False
     
