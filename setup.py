@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.1'
+version = '0.2'
 
 setup(name='chaoflow.testing.crawler',
       version=version,
@@ -20,7 +20,7 @@ setup(name='chaoflow.testing.crawler',
       author='Florian Friesdorf',
       author_email='flo@chaoflow.net',
       url='http://github.com/chaoflow/chaoflow.testing.crawler',
-      license='AGPL',
+      license='LGPL',
       packages = find_packages('src'),
       package_dir = {'': 'src'},
       namespace_packages=['chaoflow','chaoflow.testing'],
@@ -29,9 +29,11 @@ setup(name='chaoflow.testing.crawler',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
+          'interlude',
       ],
       extras_require={
           'test': [
+              'interlude',
               'chaoflow.testing.crawler',
               ],
           },

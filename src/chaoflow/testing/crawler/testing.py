@@ -93,7 +93,7 @@ def scanfordoctest(file):
     return False
     
 
-def get_test_suite(pkgname, files=[]):
+def create_test_suite(pkgname, files=[]):
     """construct a test suite for a package
     
     test suite will contain all doctests found somewhere in the package and

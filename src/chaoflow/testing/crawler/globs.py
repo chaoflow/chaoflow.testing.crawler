@@ -22,15 +22,19 @@ __docformat__ = "plaintext"
 from UserDict import UserDict
 from UserList import UserList
 
-from chaoflow.testing.crawler import interact
 from chaoflow.testing.crawler import utils
 
 test_globs = dict(
         UserDict = UserDict,
         UserList = UserList,
-        interact = interact.interact,
         ispkgdir = utils.ispkgdir,
         pkgpath = utils.pkgpath,
         recursedir = utils.recursedir,
         saneimport = utils.saneimport,
         )
+try:
+    import interlude
+except ImportError:
+    pass
+else:
+    test_globs['interact'] = interlude.interact
