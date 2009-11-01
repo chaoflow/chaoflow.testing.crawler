@@ -10,7 +10,7 @@ setup(name='chaoflow.testing.crawler',
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers = [
-          'Development Status :: 2 - Pre-Alpha',
+          'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
           'Programming Language :: Python',
           'Natural Language :: English',
@@ -30,6 +30,11 @@ setup(name='chaoflow.testing.crawler',
           'setuptools',
           # -*- Extra requirements: -*-
       ],
+      extras_require={
+          'test': [
+              'chaoflow.testing.crawler',
+              ],
+          },
       entry_points="""
       # -*- Entry points: -*-
       """,
