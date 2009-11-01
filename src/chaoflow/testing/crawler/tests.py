@@ -1,8 +1,8 @@
-# paula.testing.tests.py
+# chaoflow.testing.crawler.tests.py
 #
 # You can simply copy this file to your package and adjust it to your needs
 
-from paula.testing import get_test_suite
+from chaoflow.testing.crawler import get_test_suite
 
 # File to test, relative to the package root
 # all .py files are found

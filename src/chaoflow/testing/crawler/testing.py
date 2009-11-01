@@ -20,22 +20,20 @@ __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
 import os
-import os.path
-import types
 import unittest
 
-from zope.component import testing
+#from zope.component import testing
 
 from zope.testing import doctest
 from zope.testing import doctestunit
 
-from paula.testing.utils import hasdoctests
-from paula.testing.utils import ispackagedir
-from paula.testing.utils import pkgpath
-from paula.testing.utils import recursedir
-from paula.testing.utils import saneimport
+from chaoflow.testing.crawler.utils import hasdoctests
+from chaoflow.testing.crawler.utils import ispkgdir
+from chaoflow.testing.crawler.utils import pkgpath
+from chaoflow.testing.crawler.utils import recursedir
+from chaoflow.testing.crawler.utils import saneimport
 
-from paula.testing.globs import test_globs
+from chaoflow.testing.crawler.globs import test_globs
 
 optionflags = \
         doctest.REPORT_ONLY_FIRST_FAILURE + \
@@ -51,7 +49,7 @@ def setUp(test):
     Look at the Python unittest and doctest module documentation to learn 
     more about how to prepare state and pass it into various tests.
     """
-    testing.setUp(test)
+    #testing.setUp(test)
     for k,v in test_globs.items():
         test.globs[k] = v
     test.globs['testinstance'] = test
@@ -65,7 +63,7 @@ def setUp(test):
 def tearDown(test):
     """
     """
-    testing.tearDown(test)
+    #testing.tearDown(test)
 
 def scanfordoctest(file):
     """Decides whether a file should be scanned for doctests
@@ -134,7 +132,7 @@ def get_test_suite(pkgname, files=[]):
 
         doctestfiles = recursedir(
                 path,
-                cond=ispackagedir,
+                cond=ispkgdir,
                 filefilter=scanfordoctest,
                 )
         # make relative to pkg path

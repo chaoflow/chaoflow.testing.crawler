@@ -29,7 +29,7 @@ def hasdoctests(file):
             return True
 
 
-def ispackagedir(path):
+def ispkgdir(path):
     initfile = os.path.join(path, '__init__.py')
     result = os.path.isfile(initfile)
     return result
@@ -38,11 +38,9 @@ def ispackagedir(path):
 def pkgpath(pkg):
     """Returns the path to a imported package
 
-        >>> from paula.testing.utils import saneimport
-        >>> from paula.testing.utils import pkgpath
-        >>> pkg = saneimport('paula.testing')
-        >>> pkgpath(pkg).split(os.sep)[-2:]
-        ['paula', 'testing']
+        >>> pkg = saneimport('chaoflow.testing.crawler')
+        >>> pkgpath(pkg).split(os.sep)[-3:]
+        ['chaoflow', 'testing', 'crawler']
     """
     path = pkg.__file__.replace('.pyc','').replace('.py','')
     if not path.endswith('__init__'):
@@ -60,20 +58,17 @@ def recursedir(path, cond=lambda x: True, filefilter=lambda x: True):
     into a directory. The condition is a function that takes the directory as
     argument and returns either True or False.
 
-        >>> from paula.testing.utils import saneimport
-        >>> from paula.testing.utils import recursedir
-        >>> from paula.testing.utils import pkgpath
-        >>> from paula.testing.utils import ispackagedir
-        >>> pkg = saneimport('paula.testing')
+        >>> from chaoflow.testing.crawler.utils import recursedir
+        >>> pkg = saneimport('chaoflow.testing.crawler')
         >>> l1 = recursedir(pkgpath(pkg))
         >>> l1 = filter(lambda x: not x.endswith('.swp'), l1)
         >>> len(l1)
-        34
+        32
 
-        >>> l2 = recursedir(pkgpath(pkg), cond=ispackagedir)
+        >>> l2 = recursedir(pkgpath(pkg), cond=ispkgdir)
         >>> l2 = filter(lambda x: not x.endswith('.swp'), l2)
         >>> len(l2)
-        30
+        28
     """
     files=[]
     ls = os.listdir(path)

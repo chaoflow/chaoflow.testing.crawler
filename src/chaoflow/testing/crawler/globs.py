@@ -22,31 +22,15 @@ __docformat__ = "plaintext"
 from UserDict import UserDict
 from UserList import UserList
 
-from zope.component import provideAdapter, provideUtility
-from zope.component import adapts
-from zope.component import getUtility, queryUtility
-from zope.component import getSiteManager
-
-from zope.interface import alsoProvides, implements, providedBy
-from zope.interface import Interface, Attribute
-
-from paula.testing import interact
-from paula.testing import mock
+from chaoflow.testing.crawler import interact
+from chaoflow.testing.crawler import utils
 
 test_globs = dict(
-        Attribute = Attribute,
-        Interface = Interface,
-        Mock = mock.Mock,
         UserDict = UserDict,
         UserList = UserList,
-        adapts = adapts,
-        alsoProvides = alsoProvides,
-        getUtility = getUtility,
-        getSiteManager = getSiteManager,
         interact = interact.interact,
-        implements = implements,
-        provideAdapter = provideAdapter,
-        provideUtility = provideUtility,
-        providedBy = providedBy,
-        queryUtility = queryUtility,
+        ispkgdir = utils.ispkgdir,
+        pkgpath = utils.pkgpath,
+        recursedir = utils.recursedir,
+        saneimport = utils.saneimport,
         )

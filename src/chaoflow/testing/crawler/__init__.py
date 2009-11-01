@@ -19,4 +19,4 @@
 __author__ = "Florian Friesdorf <flo@chaoflow.net>"
 __docformat__ = "plaintext"
 
-from paula.testing.testing import get_test_suite
+from chaoflow.testing.crawler.testing import get_test_suite
