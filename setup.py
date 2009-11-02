@@ -31,12 +31,14 @@ setup(name='chaoflow.testing.crawler',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
-          'interlude',
       ],
       extras_require={
           'test': [
               'interlude',
               'chaoflow.testing.crawler',
+              ],
+          'interact': [
+              'interlude',
               ],
           },
       entry_points="""
