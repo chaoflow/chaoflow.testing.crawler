@@ -19,10 +19,11 @@ is avavailable:
 
     >>> ipshell( locals())
 
-The output is suitable to be used as a doctest.
+The output is not suitable to be used as a doctest. However, you can also run
+it in a mode suitable for doctest generation:
 
+    >>> ipshell( locals(), doctest=True)
 
-You can also run it with the real ipython prompt, where output is fancier but
-cannot be used as a doctest:
+or shorter:
 
-    >>> ipshell( locals(), doctest=False)
+    >>> dtipshell( locals())

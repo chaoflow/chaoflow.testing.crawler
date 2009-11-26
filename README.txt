@@ -58,10 +58,10 @@ Declare the dependency in setup.py::
         )
 
 If interlude is available, ``interlude.interact`` will be available as
-``interact`` in your test environment.
+``interact`` in your test environment (see interlude).
 
-If chaoflow.testing.ipython is available, ``ipshell`` will be available as
-``ipshell`` in your test environment.
+If chaoflow.testing.ipython is available, ``ipshell`` and ``dtipshell`` will be
+available in your test environment (see chaoflow.testing.ipython).
 
 example buildout.cfg using chaoflow.testing.crawler and zc.recipe.testrunner::
 
