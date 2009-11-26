@@ -51,6 +51,7 @@ Declare the dependency in setup.py::
         extras_require={
             'test': [
                 'interlude',
+                'chaoflow.testing.ipython',
                 'chaoflow.testing.crawler',
                 ],
             },
@@ -58,6 +59,9 @@ Declare the dependency in setup.py::
 
 If interlude is available, ``interlude.interact`` will be available as
 ``interact`` in your test environment.
+
+If chaoflow.testing.ipython is available, ``ipshell`` will be available as
+``ipshell`` in your test environment.
 
 example buildout.cfg using chaoflow.testing.crawler and zc.recipe.testrunner::
 
@@ -80,7 +84,7 @@ Run ``./bin/test --list-tests`` to get a list of all registered tests and see
 ``./bin/test --help`` for further information.
 
 
-LICENSE
+License
 =======
 
 chaoflow.testing.crawler is licensed under LGPLv3. Please let me know if this

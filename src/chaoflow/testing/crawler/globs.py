@@ -39,3 +39,11 @@ except ImportError:
     pass
 else:
     test_globs['interact'] = interlude.interact
+
+try:
+    import chaoflow.testing.ipython
+except ImportError:
+    pass
+else:
+    from chaoflow.testing.ipython import ipshell
+    test_globs['ipshell'] = ipshell
