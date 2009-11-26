@@ -35,12 +35,12 @@ setup(name='chaoflow.testing.crawler',
       extras_require={
           'test': [
               'interlude',
-              'chaoflow.testing.ipython',
+              'chaoflow.testing.ipython>=0.4',
               'chaoflow.testing.crawler',
               ],
           'interact': [
               'interlude',
-              'chaoflow.testing.ipython',
+              'chaoflow.testing.ipython>=0.4',
               ],
           },
       entry_points="""
