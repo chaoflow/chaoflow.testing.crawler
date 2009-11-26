@@ -45,5 +45,6 @@ try:
 except ImportError:
     pass
 else:
-    from chaoflow.testing.ipython import ipshell
+    from chaoflow.testing.ipython import ipshell, dtipshell
     test_globs['ipshell'] = ipshell
+    test_globs['dtipshell'] = dtipshell
