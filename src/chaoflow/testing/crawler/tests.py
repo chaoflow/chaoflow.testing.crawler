@@ -1,6 +1,14 @@
-# chaoflow.testing.crawler.tests.py
-#
-# You can simply copy this file to your package and adjust it to your needs
+"""
+chaoflow.testing.crawler.tests.py
+
+1. Copy this file to your package:
+   - either as `tests.py` into the root of your package
+   - or as anything you like (e.g. test_crawler.py) into a subpackage `tests` in the root of your
+     package
+2. list additional files
+"""
+
+import re
 
 from chaoflow.testing.crawler import create_test_suite
 
@@ -11,7 +19,7 @@ files = [
         'README.txt'
         ]
 
-# We assume that this modules is in the root of your package
-pkgname = __name__[:-6]
+pkgname = __name__ + '.'
+pkgname = pkgname[:pkgname.rindex('.tests.')]
 
 test_suite = create_test_suite(pkgname, files)
